@@ -1,6 +1,8 @@
+{-# LANGUAGE FlexibleContexts #-}
 module Main where
 
 import Control.Category
+import Control.Category.Braided
 
 
 -- A bunch of fake primitives from which to build compositions
@@ -48,6 +50,15 @@ exampleOutput1 = split >>> add
 
 exampleOutput2 :: Category k => k Int Int
 exampleOutput2 = split >>> add
+
+
+-- exampleInput3 = do
+--     x <- getInput
+--     (y,z) <- split x
+--     add (z,y)
+
+exampleOutput3 :: Symmetric k (,) => k Int Int
+exampleOutput3 = split >>> swap >>> add
 
 
 main :: IO ()
