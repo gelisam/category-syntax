@@ -1,9 +1,11 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts, TemplateHaskell #-}
 module Main where
 
 import Control.Categorical.Bifunctor
 import Control.Category
 import Control.Category.Braided
+
+import Control.Category.Syntax
 
 
 -- A bunch of fake primitives from which to build compositions
@@ -135,4 +137,4 @@ exampleOutput9 = splitEither >>> second op >>> first op >>> swap >>> joinEither
 
 
 main :: IO ()
-main = putStrLn "typechecks."
+main = putStrLn $(generate)
