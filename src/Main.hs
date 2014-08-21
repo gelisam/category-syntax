@@ -99,7 +99,7 @@ exampleOutput5 = splitEither >>> bimap op op >>> swap >>> joinEither
 --     joinEither (z',y')
 
 exampleOutput6 :: Symmetric k Either => k Int Int
-exampleOutput6 = splitEither >>> swap >>> bimap op op >>> joinEither
+exampleOutput6 = splitEither >>> second op >>> first op >>> swap >>> joinEither
 
 
 main :: IO ()
