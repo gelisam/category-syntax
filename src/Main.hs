@@ -74,32 +74,64 @@ exampleOutput3 = split >>> swap >>> add
 -- exampleInput4 = do
 --     x <- getInput
 --     (y,z) <- splitEither x
---     joinEither (z,y)
+--     y' <- op <- y
+--     joinEither (y',z)
 
-exampleOutput4 :: Symmetric k Either => k Int Int
-exampleOutput4 = splitEither >>> swap >>> joinEither
+exampleOutput4 :: PFunctor Either k k => k Int Int
+exampleOutput4 = splitEither >>> first op >>> joinEither
 
 
 -- exampleInput5 = do
 --     x <- getInput
 --     (y,z) <- splitEither x
+--     z' <- op <- z
+--     joinEither (y,z')
+
+exampleOutput5 :: QFunctor Either k k => k Int Int
+exampleOutput5 = splitEither >>> second op >>> joinEither
+
+
+-- exampleInput6 = do
+--     x <- getInput
+--     (y,z) <- splitEither x
+--     joinEither (z,y)
+
+exampleOutput6 :: Symmetric k Either => k Int Int
+exampleOutput6 = splitEither >>> swap >>> joinEither
+
+
+-- exampleInput7 = do
+--     x <- getInput
+--     (y,z) <- splitEither x
 --     y' <- op y
 --     z' <- op z
 --     joinEither (z',y')
 
-exampleOutput5 :: Symmetric k Either => k Int Int
-exampleOutput5 = splitEither >>> bimap op op >>> swap >>> joinEither
+exampleOutput7 :: Bifunctor Either k k k => k Int Int
+exampleOutput7 = splitEither >>> first op >>> second op >>> joinEither
 
 
--- exampleInput6 = do
+-- exampleInput8 = do
+--     x <- getInput
+--     (y,z) <- splitEither x
+--     y' <- op y
+--     (z', y'') <- braid (y', z)
+--     z'' <- op z'
+--     joinEither (z'',y'')
+
+exampleOutput8 :: Braided k Either => k Int Int
+exampleOutput8 = splitEither >>> first op >>> braid >>> first op >>> joinEither
+
+
+-- exampleInput9 = do
 --     x <- getInput
 --     (y,z) <- splitEither x
 --     z' <- op z
 --     y' <- op y
 --     joinEither (z',y')
 
-exampleOutput6 :: Symmetric k Either => k Int Int
-exampleOutput6 = splitEither >>> second op >>> first op >>> swap >>> joinEither
+exampleOutput9 :: Symmetric k Either => k Int Int
+exampleOutput9 = splitEither >>> second op >>> first op >>> swap >>> joinEither
 
 
 main :: IO ()
