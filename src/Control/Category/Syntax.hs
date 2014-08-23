@@ -22,6 +22,9 @@ idName = 'id
 thenName :: Name
 thenName = '(>>>)
 
+dollarName :: Name
+dollarName = '($)
+
 
 returnC :: Category k => k a a
 returnC = id
@@ -79,6 +82,9 @@ convertStmt (_, s) = error msg
 -- foo
 convertExp :: Pat -> Exp -> Exp
 convertExp x (AppE e x') = connectInputs x x' e
+convertExp x (InfixE (Just e) (VarE dollar) (Just x'))
+  | dollar == dollarName
+  = connectInputs x x' e
 convertExp _ e = error msg
   where
     msg = printf "expected (cmd (x,y,...)), got:\n%s" (pprint e)

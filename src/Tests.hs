@@ -81,15 +81,15 @@ typeTest0 = $(syntax [|do
 -- split >>> add
 test1 = syntax [|do
     x <- getInput
-    yz <- split x
-    add yz
+    yz <- split $ x
+    add         $ yz
   |]
 
 typeTest1 :: Category k => k Int Int
 typeTest1 = $(syntax [|do
     x <- getInput
-    yz <- split x
-    add yz
+    yz <- split $ x
+    add         $ yz
   |])
 
 
