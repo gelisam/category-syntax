@@ -5,6 +5,7 @@ import Prelude hiding (id, (.))
 
 import Control.Category
 import Language.Haskell.TH
+import Text.Printf
 
 
 -- The only command which doesn't take an input. Must be called first.
@@ -43,7 +44,9 @@ begin :: Exp -> (Pat, [Stmt])
 begin (DoE (BindS x (VarE getInput):cmds))
   | getInput == getInputName
   = (x, cmds)
-begin _ = error "expected $(syntax [|do x <- getInput; ...|])"
+begin e = error msg
+  where
+    msg = printf "expected (do x <- getInput; ...), got:\n%s" (pprint e)
 
 -- >>> continue (x, [|y <- foo x; cmds|]
 -- (foo >>> continue (y, cmds))
@@ -59,17 +62,35 @@ continue (env, (cmd:cmds)) = InfixE (Just morph)
 -- id
 end :: (Pat, Stmt) -> Exp
 end (x, NoBindS e) = convertExp x e
-end _ = error "expected $(syntax [|do ...; returnC x|])"
+end (_, s) = error msg
+  where
+    msg = printf "expected (returnC ...), got:\n%s" (pprint s)
 
 -- >>> convertStmt (x, [|y <- foo x|])
 -- (y, foo)
 convertStmt :: (Pat, Stmt) -> (Pat, Exp)
 convertStmt (x, BindS y e)
   = (y, convertExp x e)
-convertStmt _ = error "expected $(syntax [|do ...; x <- foo y; ...|])"
+convertStmt (_, s) = error msg
+  where
+    msg = printf "expected (x <- ...), got:\n%s" (pprint s)
 
+-- >>> convertExp x [|foo x|]
+-- foo
 convertExp :: Pat -> Exp -> Exp
-convertExp x (AppE e x') | x `eq` x' = e
+convertExp x (AppE e x') = connectInputs x x' e
+convertExp _ e = error msg
+  where
+    msg = printf "expected (cmd (x,y,...)), got:\n%s" (pprint e)
+
+-- >>> connectInputs x x foo
+-- foo
+connectInputs :: Pat -> Exp -> Exp -> Exp
+connectInputs x x' e | x `eq` x' = e
+connectInputs x x' _ = error msg
+  where
+    msg = printf "unsupported structural rule: %s from %s" (pprint x')
+                                                           (pprint x)
 
 
 eq :: Pat -> Exp -> Bool
