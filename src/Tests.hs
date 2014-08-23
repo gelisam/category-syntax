@@ -56,7 +56,7 @@ instance Braided (->) Either where
 
 -- |
 -- >>> pprintQ test0
--- Control.Category.id
+-- Control.Category.Syntax.returnC
 test0 = syntax [|do
     x <- getInput
     returnC x
@@ -71,19 +71,19 @@ typeTest0 = $(syntax [|do
 
 -- |
 -- >>> pprintQ test1
--- split >>> add
+-- Tests.split Control.Category.>>> Tests.add
 test1 = syntax [|do
     x <- getInput
     yz <- split x
     add yz
   |]
 
--- typeTest1 :: Category k => k Int Int
--- typeTest1 = $(syntax [|do
---     x <- getInput
---     yz <- split x
---     add yz
---   |])
+typeTest1 :: Category k => k Int Int
+typeTest1 = $(syntax [|do
+    x <- getInput
+    yz <- split x
+    add yz
+  |])
 
 
 -- exampleInput2 = do
