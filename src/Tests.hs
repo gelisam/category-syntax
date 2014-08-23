@@ -3,12 +3,16 @@ module Tests where
 
 import Control.Applicative
 import Control.Categorical.Bifunctor
-import Control.Category
+import Control.Category hiding ((.))
 import Control.Category.Structural
 import Language.Haskell.TH
 import Language.Haskell.TH.Lib
 
 import Control.Category.Syntax
+
+-- $setup
+-- >>> let printQ = runQ . fmap show
+-- >>> let pprintQ = runQ . fmap pprint
 
 
 -- A bunch of fake primitives from which to build compositions
@@ -56,7 +60,7 @@ getInput = undefined
 
 
 -- |
--- >>> runQ (pprint <$> test1)
+-- >>> pprintQ test1
 -- split >>> add
 test1 = syntax [|do
     x <- getInput
