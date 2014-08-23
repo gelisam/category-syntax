@@ -59,13 +59,13 @@ instance Braided (->) Either where
 -- Control.Category.id
 test0 = syntax [|do
     x <- getInput
-    return x
+    returnC x
   |]
 
 typeTest0 :: Category k => k a a
 typeTest0 = $(syntax [|do
     x <- getInput
-    return x
+    returnC x
   |])
 
 

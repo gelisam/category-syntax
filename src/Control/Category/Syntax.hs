@@ -14,11 +14,16 @@ getInput = undefined
 getInputName :: Name
 getInputName = 'getInput
 
+
 idName :: Name
 idName = 'id
 
-returnName :: Name
-returnName = 'return
+
+returnC :: Category k => k a a
+returnC = id
+
+returnCName :: Name
+returnCName = 'returnC
 
 
 syntax :: Q Exp -> Q Exp
@@ -37,11 +42,11 @@ syntax = fmap go
       = (x, cmds)
     begin _ = error "expected $(syntax [|do ... <- getInput; ...|])"
     
-    -- >>> end (x, [|return x|])
+    -- >>> end (x, [|returnC x|])
     -- id
     end :: (Pat, [Stmt]) -> Exp
-    end (VarP x, [NoBindS (AppE (VarE return') (VarE x'))])
-      | return' == returnName
+    end (VarP x, [NoBindS (AppE (VarE returnC') (VarE x'))])
+      | returnC' == returnCName
       , x == x'
       = VarE idName
-    end _ = error "expected $(syntax [|do ...; return ...|])"
+    end _ = error "expected $(syntax [|do ...; returnC x|])"
