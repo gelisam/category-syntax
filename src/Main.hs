@@ -1,9 +1,9 @@
-{-# LANGUAGE FlexibleContexts, TemplateHaskell #-}
+{-# LANGUAGE FlexibleContexts, MultiParamTypeClasses, TemplateHaskell #-}
 module Main where
 
 import Control.Categorical.Bifunctor
 import Control.Category
-import Control.Category.Braided
+import Control.Category.Structural
 
 import Control.Category.Syntax
 
@@ -39,6 +39,12 @@ consumeJunk1 = undefined
 
 consumeJunk2 :: Category k => k ((),Int) Int
 consumeJunk2 = undefined
+
+class Bifunctor k p => Braided k p where
+    braid :: k (p a b) (p b a)
+
+instance Braided (->) Either where
+    braid = undefined
 
 
 -- The only command which doesn't take an input. Must be called first.
@@ -79,7 +85,7 @@ exampleOutput3 = split >>> swap >>> add
 --     y' <- op <- y
 --     joinEither (y',z)
 
-exampleOutput4 :: PFunctor Either k k => k Int Int
+exampleOutput4 :: PFunctor k Either => k Int Int
 exampleOutput4 = splitEither >>> first op >>> joinEither
 
 
@@ -89,7 +95,7 @@ exampleOutput4 = splitEither >>> first op >>> joinEither
 --     z' <- op <- z
 --     joinEither (y,z')
 
-exampleOutput5 :: QFunctor Either k k => k Int Int
+exampleOutput5 :: QFunctor k Either => k Int Int
 exampleOutput5 = splitEither >>> second op >>> joinEither
 
 
@@ -109,7 +115,7 @@ exampleOutput6 = splitEither >>> swap >>> joinEither
 --     z' <- op z
 --     joinEither (z',y')
 
-exampleOutput7 :: Bifunctor Either k k k => k Int Int
+exampleOutput7 :: Bifunctor k Either => k Int Int
 exampleOutput7 = splitEither >>> first op >>> second op >>> joinEither
 
 
@@ -121,7 +127,7 @@ exampleOutput7 = splitEither >>> first op >>> second op >>> joinEither
 --     z'' <- op z'
 --     joinEither (z'',y'')
 
-exampleOutput8 :: Braided k Either => k Int Int
+exampleOutput8 :: Braided (->) Either => Int -> Int
 exampleOutput8 = splitEither >>> first op >>> braid >>> first op >>> joinEither
 
 
