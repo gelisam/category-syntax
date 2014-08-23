@@ -163,16 +163,33 @@ typeTest3 = $(syntax [|do
 
 -- |
 -- >>> pprintQ test4
--- split >>> first op >>> add
+-- split >>> swap >>> add
 test4 = syntax [|do
+    x <- getInput
+    (y,z) <- split x
+    add (z,y)
+  |]
+
+typeTest4 :: Symmetric k (,) => k Int Int
+typeTest4 = $(syntax [|do
+    x <- getInput
+    (y,z) <- split x
+    add (z,y)
+  |])
+
+
+-- |
+-- >>> pprintQ test5
+-- split >>> first op >>> add
+test5 = syntax [|do
     x <- getInput
     (y,z) <- split x
     y' <- op y
     add (y',z)
   |]
 
-typeTest4 :: PFunctor k Either => k Int Int
-typeTest4 = $(syntax [|do
+typeTest5 :: PFunctor k Either => k Int Int
+typeTest5 = $(syntax [|do
     x <- getInput
     (y,z) <- split x
     y' <- op y
@@ -181,31 +198,22 @@ typeTest4 = $(syntax [|do
 
 
 -- |
--- >>> pprintQ test5
+-- >>> pprintQ test6
 -- splitEither >>> second op >>> joinEither
-test5 = syntax [|do
+test6 = syntax [|do
     x <- getInput
     (y,z) <- splitEither x
     z' <- op z
     joinEither (y,z')
   |]
 
-typeTest5 :: PFunctor k Either => k Int Int
-typeTest5 = $(syntax [|do
+typeTest6 :: PFunctor k Either => k Int Int
+typeTest6 = $(syntax [|do
     x <- getInput
     (y,z) <- splitEither x
     z' <- op z
     joinEither (y,z')
   |])
-
-
--- exampleInput3 = do
---     x <- getInput
---     (y,z) <- split x
---     add (z,y)
-
-exampleOutput3 :: Symmetric k (,) => k Int Int
-exampleOutput3 = split >>> swap >>> add
 
 
 -- exampleInput5 = do

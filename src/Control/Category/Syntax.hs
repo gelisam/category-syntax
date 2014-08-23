@@ -7,6 +7,8 @@ import Control.Category
 import Language.Haskell.TH
 import Text.Printf
 
+import Control.Category.Structural
+
 
 -- The only command which doesn't take an input. Must be called first.
 getInput :: a
@@ -24,6 +26,9 @@ thenName = '(>>>)
 
 dollarName :: Name
 dollarName = '($)
+
+swapName :: Name
+swapName = 'swap
 
 
 returnC :: Category k => k a a
@@ -55,9 +60,7 @@ begin e = error msg
 -- (foo >>> continue (y, cmds))
 continue :: (Pat, [Stmt]) -> Exp
 continue (env, [cmd]) = end (env, cmd)
-continue (env, (cmd:cmds)) = InfixE (Just morph)
-                                    (VarE thenName)
-                                    (Just (continue (env', cmds)))
+continue (env, (cmd:cmds)) = morph >>>> continue (env', cmds)
   where
     (env', morph) = convertStmt (env, cmd)
 
@@ -91,8 +94,15 @@ convertExp _ e = error msg
 
 -- >>> connectInputs x x foo
 -- foo
+-- >>> connectInputs (x,y) (y,x) foo
+-- (swap >>> foo)
 connectInputs :: Pat -> Exp -> Exp -> Exp
-connectInputs x x' e | x `eq` x' = e
+connectInputs x x' e
+  | x `eq` x' = e
+connectInputs (TupP [x,y]) (TupE [y',x']) e
+  | x `eq` x'
+  , y `eq` y'
+  = VarE swapName >>>> e
 connectInputs x x' _ = error msg
   where
     msg = printf "unsupported structural rule: %s from %s" (pprint x')
@@ -103,3 +113,8 @@ eq :: Pat -> Exp -> Bool
 eq (VarP x)  (VarE x')  = x == x'
 eq (TupP xs) (TupE xs') = and (zipWith eq xs xs')
 eq _ _ = False
+
+(>>>>) :: Exp -> Exp -> Exp
+e1 >>>> e2 = InfixE (Just e1)
+                    (VarE thenName)
+                    (Just e2)
