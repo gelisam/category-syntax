@@ -54,14 +54,9 @@ instance Braided (->) Either where
     braid = undefined
 
 
--- The only command which doesn't take an input. Must be called first.
-getInput :: a
-getInput = undefined
-
-
 -- |
 -- >>> pprintQ test0
--- id
+-- Control.Category.id
 test0 = syntax [|do
     x <- getInput
     return x
