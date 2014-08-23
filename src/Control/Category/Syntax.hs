@@ -30,10 +30,10 @@ returnCName = 'returnC
 
 
 syntax :: Q Exp -> Q Exp
-syntax = fmap categorySyntax
+syntax = fmap convertDo
 
-categorySyntax :: Exp -> Exp
-categorySyntax = continue . begin
+convertDo :: Exp -> Exp
+convertDo = continue . begin
 
 -- >>> begin [|do x <- getInput
 --                cmds
@@ -53,23 +53,23 @@ continue (env, (cmd:cmds)) = InfixE (Just morph)
                                     (VarE thenName)
                                     (Just (continue (env', cmds)))
   where
-    (env', morph) = makeMorphism (env, cmd)
-
--- >>> makeMorphism (x, [|y <- foo x|])
--- (y, foo)
-makeMorphism :: (Pat, Stmt) -> (Pat, Exp)
-makeMorphism (x, BindS y (AppE morph x'))
-  | x `eq` x'
-  = (y, morph)
-makeMorphism _ = error "expected $(syntax [|do ...; x <- foo y; ...|])"
+    (env', morph) = convertStmt (env, cmd)
 
 -- >>> end (x, [|returnC x|])
 -- id
 end :: (Pat, Stmt) -> Exp
-end (x, NoBindS (AppE morph x'))
-  | x `eq` x'
-  = morph
+end (x, NoBindS e) = convertExp x e
 end _ = error "expected $(syntax [|do ...; returnC x|])"
+
+-- >>> convertStmt (x, [|y <- foo x|])
+-- (y, foo)
+convertStmt :: (Pat, Stmt) -> (Pat, Exp)
+convertStmt (x, BindS y e)
+  = (y, convertExp x e)
+convertStmt _ = error "expected $(syntax [|do ...; x <- foo y; ...|])"
+
+convertExp :: Pat -> Exp -> Exp
+convertExp x (AppE e x') | x `eq` x' = e
 
 
 eq :: Pat -> Exp -> Bool
