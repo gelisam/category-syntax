@@ -11,8 +11,8 @@ import Language.Haskell.TH.Lib
 import Control.Category.Syntax
 
 -- $setup
--- >>> let printQ = runQ . fmap show
--- >>> let pprintQ = runQ . fmap pprint
+-- >>> let printQ = (>>= putStrLn) . runQ . fmap show
+-- >>> let pprintQ = (>>= putStrLn) . runQ . fmap pprint
 
 
 -- A bunch of fake primitives from which to build compositions
