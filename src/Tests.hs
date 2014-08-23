@@ -60,6 +60,21 @@ getInput = undefined
 
 
 -- |
+-- >>> pprintQ test0
+-- id
+test0 = syntax [|do
+    x <- getInput
+    return x
+  |]
+
+-- typeTest0 :: Category k => k a a
+-- typeTest0 = $(syntax [|do
+--     x <- getInput
+--     return x
+--   |])
+
+
+-- |
 -- >>> pprintQ test1
 -- split >>> add
 test1 = syntax [|do
