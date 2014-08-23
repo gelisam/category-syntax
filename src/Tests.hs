@@ -1,25 +1,59 @@
 {-# LANGUAGE FlexibleContexts, MultiParamTypeClasses, TemplateHaskell #-}
 module Tests where
 
+import Prelude hiding (id, (.))
+
 import Control.Applicative
 import Control.Categorical.Bifunctor
-import Control.Category hiding ((.))
+import Control.Category
 import Control.Category.Structural
 import Language.Haskell.TH
 import Language.Haskell.TH.Lib
+import Text.Printf
 
 import Control.Category.Syntax
 
 -- $setup
 -- >>> let printQ = (>>= putStrLn) . runQ . fmap show
--- >>> :{
---   let simplifyWord s = case dropWhile (/= '.') s of
---           ""       -> s
---           ('.':s') -> simplifyWord s'
--- :}
+-- >>> let pprintQ = (>>= putStrLn) . runQ . fmap showExp
+
+-- A pretty-printer, specialized for the output of $(syntax ...).
 -- 
--- >>> let simplifyString = unwords . map simplifyWord . words
--- >>> let pprintQ = (>>= putStrLn) . runQ . fmap (simplifyString . pprint)
+-- >>> show [|foo >>> bar|]
+-- InfixE (Just (VarE Tests.foo)) (VarE Control.Category.>>>) (Just (VarE Tests.bar))
+-- >>> pprint [|foo >>> bar|]
+-- Tests.foo Control.Category.>>> (Tests.bar Control.Category.>>> Tests.baz)
+-- >>> showExp [|foo >>> bar >>> baz|]
+-- foo >>> bar >>> baz
+showExp :: Exp -> String
+showExp (VarE x) = showName x
+showExp (InfixE (Just e1) (VarE gtgtgt) (Just e2))
+  | gtgtgt == gtgtgtName
+  = printf "%s >>> %s" (showExp e1) (showExp e2)
+showExp e = pprint e
+
+gtgtgtName :: Name
+gtgtgtName = '(>>>)
+
+-- >>> show 'id
+-- Control.Category.id
+-- >>> showName 'id
+-- id
+showName :: Name -> String
+showName = last . splitOn '.' . show
+
+-- | Why is this not already in Data.List?
+-- 
+-- >>> splitOn '/' "foo/bar/baz"
+-- ["foo","bar","baz"]
+-- >>> splitOn '/' "foo//bar"
+-- ["foo","","bar"]
+-- >>> splitOn '/' "/foo/bar/baz/"
+-- ["","foo","bar","baz",""]
+splitOn :: Eq a => a -> [a] -> [[a]]
+splitOn delim xs = case break (== delim) xs of
+    (xs1, _:xs2) -> xs1 : splitOn delim xs2
+    (xs1, [])    -> [xs1]
 
 
 -- A bunch of fake primitives from which to build compositions
