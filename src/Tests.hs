@@ -12,7 +12,14 @@ import Control.Category.Syntax
 
 -- $setup
 -- >>> let printQ = (>>= putStrLn) . runQ . fmap show
--- >>> let pprintQ = (>>= putStrLn) . runQ . fmap pprint
+-- >>> :{
+--   let simplifyWord s = case dropWhile (/= '.') s of
+--           ""       -> s
+--           ('.':s') -> simplifyWord s'
+-- :}
+-- 
+-- >>> let simplifyString = unwords . map simplifyWord . words
+-- >>> let pprintQ = (>>= putStrLn) . runQ . fmap (simplifyString . pprint)
 
 
 -- A bunch of fake primitives from which to build compositions
@@ -56,7 +63,7 @@ instance Braided (->) Either where
 
 -- |
 -- >>> pprintQ test0
--- Control.Category.Syntax.returnC
+-- returnC
 test0 = syntax [|do
     x <- getInput
     returnC x
@@ -71,7 +78,7 @@ typeTest0 = $(syntax [|do
 
 -- |
 -- >>> pprintQ test1
--- Tests.split Control.Category.>>> Tests.add
+-- split >>> add
 test1 = syntax [|do
     x <- getInput
     yz <- split x
