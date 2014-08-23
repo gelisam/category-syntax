@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleContexts, MultiParamTypeClasses, TemplateHaskell #-}
-module Main where
+module Tests where
 
 import Control.Applicative
 import Control.Categorical.Bifunctor
@@ -151,10 +151,3 @@ exampleOutput8 = splitEither >>> first op >>> braid >>> first op >>> joinEither
 
 exampleOutput9 :: Symmetric k Either => k Int Int
 exampleOutput9 = splitEither >>> second op >>> first op >>> swap >>> joinEither
-
-
--- |
--- >>> main
--- typechecks.
-main :: IO ()
-main = putStrLn "typechecks."

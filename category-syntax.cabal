@@ -22,7 +22,7 @@ library
                      , Control.Category.Monoidal
                      , Control.Category.Structural
                      , Control.Category.Syntax
-                     , Main
+                     , Tests
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.8

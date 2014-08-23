@@ -1,4 +1,4 @@
 import Test.DocTest
 
 main :: IO ()
-main = doctest ["-isrc", "src/Main.hs"]
+main = doctest ["-isrc", "src/Tests.hs"]
