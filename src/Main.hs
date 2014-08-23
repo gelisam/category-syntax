@@ -56,18 +56,20 @@ getInput = undefined
 
 
 -- |
--- >>> runQ ((==) <$> actualOutput1 <*> (unType <$> expectedOutput1))
--- True
-exampleInput1 = [|do x <- getInput
-                     yz <- split x
-                     add yz
-                 |]
+-- >>> runQ (pprint <$> test1)
+-- split >>> add
+test1 = generate [|do
+    x <- getInput
+    yz <- split x
+    add yz
+  |]
 
-expectedOutput1 :: TExpQ (Int -> Int)
-expectedOutput1 = [||split >>> add||]
-
-actualOutput1 :: ExpQ
-actualOutput1 = generate exampleInput1
+-- typeTest1 :: Category k => k Int Int
+-- typeTest1 = $(generate [|do
+--     x <- getInput
+--     yz <- split x
+--     add yz
+--   |])
 
 
 -- exampleInput2 = do
