@@ -58,15 +58,21 @@ continue (env, (cmd:cmds)) = InfixE (Just morph)
 -- >>> makeMorphism (x, [|y <- foo x|])
 -- (y, foo)
 makeMorphism :: (Pat, Stmt) -> (Pat, Exp)
-makeMorphism (VarP x, BindS y (AppE morph (VarE x')))
-  | x == x'
+makeMorphism (x, BindS y (AppE morph x'))
+  | x `eq` x'
   = (y, morph)
 makeMorphism _ = error "expected $(syntax [|do ...; x <- foo y; ...|])"
 
 -- >>> end (x, [|returnC x|])
 -- id
 end :: (Pat, Stmt) -> Exp
-end (VarP x, NoBindS (AppE morph (VarE x')))
-  | x == x'
+end (x, NoBindS (AppE morph x'))
+  | x `eq` x'
   = morph
 end _ = error "expected $(syntax [|do ...; returnC x|])"
+
+
+eq :: Pat -> Exp -> Bool
+eq (VarP x)  (VarE x')  = x == x'
+eq (TupP xs) (TupE xs') = and (zipWith eq xs xs')
+eq _ _ = False
