@@ -93,13 +93,21 @@ typeTest1 = $(syntax [|do
   |])
 
 
--- exampleInput2 = do
---     x <- getInput
---     (y,z) <- split x
---     add (y,z)
+-- |
+-- >>> pprintQ test2
+-- split >>> add
+test2 = syntax [|do
+    x <- getInput
+    (y,z) <- split x
+    add (y,z)
+  |]
 
-exampleOutput2 :: Category k => k Int Int
-exampleOutput2 = split >>> add
+typeTest2 :: Category k => k Int Int
+typeTest2 = $(syntax [|do
+    x <- getInput
+    (y,z) <- split x
+    add (y,z)
+  |])
 
 
 -- exampleInput3 = do
