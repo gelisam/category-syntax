@@ -127,6 +127,44 @@ typeTest3 = $(syntax [|do
   |])
 
 
+-- |
+-- >>> pprintQ test4
+-- split >>> first op >>> add
+test4 = syntax [|do
+    x <- getInput
+    (y,z) <- split x
+    y' <- op y
+    add (y',z)
+  |]
+
+typeTest4 :: PFunctor k Either => k Int Int
+typeTest4 = $(syntax [|do
+    x <- getInput
+    (y,z) <- split x
+    y' <- op y
+    add (y',z)
+  |])
+
+
+-- |
+-- >>> pprintQ test5
+-- splitEither >>> second op >>> joinEither
+test5 = syntax [|do
+    x <- getInput
+    (y,z) <- splitEither x
+    z' <- op z
+    joinEither (y,z')
+  |]
+
+typeTest5 :: PFunctor k Either => k Int Int
+typeTest5 = $(syntax [|do
+    x <- getInput
+    (y,z) <- splitEither x
+    z' <- op z
+    joinEither (y,z')
+  |])
+
+
 -- exampleInput3 = do
 --     x <- getInput
 --     (y,z) <- split x
@@ -134,16 +172,6 @@ typeTest3 = $(syntax [|do
 
 exampleOutput3 :: Symmetric k (,) => k Int Int
 exampleOutput3 = split >>> swap >>> add
-
-
--- exampleInput4 = do
---     x <- getInput
---     (y,z) <- splitEither x
---     y' <- op <- y
---     joinEither (y',z)
-
-exampleOutput4 :: PFunctor k Either => k Int Int
-exampleOutput4 = splitEither >>> first op >>> joinEither
 
 
 -- exampleInput5 = do
