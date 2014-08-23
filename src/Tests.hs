@@ -58,14 +58,14 @@ getInput = undefined
 -- |
 -- >>> runQ (pprint <$> test1)
 -- split >>> add
-test1 = generate [|do
+test1 = syntax [|do
     x <- getInput
     yz <- split x
     add yz
   |]
 
 -- typeTest1 :: Category k => k Int Int
--- typeTest1 = $(generate [|do
+-- typeTest1 = $(syntax [|do
 --     x <- getInput
 --     yz <- split x
 --     add yz

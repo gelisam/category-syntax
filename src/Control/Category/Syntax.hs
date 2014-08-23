@@ -4,5 +4,5 @@ module Control.Category.Syntax where
 import Language.Haskell.TH
 
 
-generate :: Q Exp -> Q Exp
-generate _ = [|"typechecks."|]
+syntax :: Q Exp -> Q Exp
+syntax _ = [|"typechecks."|]
