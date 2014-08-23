@@ -45,8 +45,7 @@ syntax = fmap go
     -- >>> end (x, [|returnC x|])
     -- id
     end :: (Pat, [Stmt]) -> Exp
-    end (VarP x, [NoBindS (AppE (VarE returnC') (VarE x'))])
-      | returnC' == returnCName
-      , x == x'
-      = VarE idName
+    end (VarP x, [NoBindS (AppE morph (VarE x'))])
+      | x == x'
+      = morph
     end _ = error "expected $(syntax [|do ...; returnC x|])"
