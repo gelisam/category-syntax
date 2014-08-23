@@ -45,10 +45,10 @@ data Vars = Var Name | Pair Vars Vars
 type Cmd = Exp
 
 -- A simpler representation for [|x' <- cmd x|]
-data Step = Step
-  { args    :: Vars -- (x,y,...)
-  , command :: Cmd  -- cmd :: k (a,b,...) (a',b',...)
-  , results :: Vars -- (x',b',...)
+data Step a = Step
+  { preCond  :: a    -- (x,y,...)
+  , command  :: Cmd  -- cmd :: k (a,b,...) (a',b',...)
+  , postCont :: a    -- (x',b',...)
   }
 
 -- A simpler representation for [|do x <- getInput
@@ -56,12 +56,12 @@ data Step = Step
 --                                   z <- cmd' y
 --                                   returnC z
 --                               |]
-data Pipeline = Pipeline
-  { firstArgs         :: Vars    -- do (x,y,...) <- getInput
-  , intermediateSteps :: [Step]  --    y <- cmd x
-                                 --    z <- cmd' y
-  , lastArgs          :: Vars    --            z
-  , lastCommand       :: Cmd     --    returnC
+data Pipeline a = Pipeline
+  { initialCond       :: a         -- do (x,y,...) <- getInput
+  , intermediateSteps :: [Step a]  --    y <- cmd x
+                                   --    z <- cmd' y
+  , finalCond         :: a         --            z
+  , finalCommand      :: Cmd       --    returnC
   }
 
 
@@ -89,7 +89,7 @@ splitStep e = error msg
   where
     msg = printf "expected (cmd (x,y,...)), got:\n%s" (pprint e)
 
-mkStep :: Stmt -> Step
+mkStep :: Stmt -> Step Vars
 mkStep (BindS x' e) = uncurry Step (splitStep e) (mkVarsP x')
 mkStep s = error msg
   where
@@ -104,7 +104,7 @@ splitPipeline e = error msg
   where
     msg = printf "expected (do x <- getInput; ...), got:\n%s" (pprint e)
 
-mkPipeline :: Exp -> Pipeline
+mkPipeline :: Exp -> Pipeline Vars
 mkPipeline e = Pipeline (mkVarsP x) (map mkStep stmts) lastX lastCmd
   where
     (x, stmts, lastStmt) = splitPipeline e
