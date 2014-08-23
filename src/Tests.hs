@@ -110,6 +110,23 @@ typeTest2 = $(syntax [|do
   |])
 
 
+-- |
+-- >>> pprintQ test3
+-- splitEither >>> joinEither
+test3 = syntax [|do
+    x <- getInput
+    (y,z) <- splitEither x
+    joinEither (y,z)
+  |]
+
+typeTest3 :: Category k => k Int Int
+typeTest3 = $(syntax [|do
+    x <- getInput
+    (y,z) <- splitEither x
+    joinEither (y,z)
+  |])
+
+
 -- exampleInput3 = do
 --     x <- getInput
 --     (y,z) <- split x
