@@ -1,9 +1,12 @@
 {-# LANGUAGE FlexibleContexts, MultiParamTypeClasses, TemplateHaskell #-}
 module Main where
 
+import Control.Applicative
 import Control.Categorical.Bifunctor
 import Control.Category
 import Control.Category.Structural
+import Language.Haskell.TH
+import Language.Haskell.TH.Lib
 
 import Control.Category.Syntax
 
@@ -52,13 +55,19 @@ getInput :: a
 getInput = undefined
 
 
--- exampleInput1 = do
---     x <- getInput
---     yz <- split x
---     add yz
+-- |
+-- >>> runQ ((==) <$> actualOutput1 <*> (unType <$> expectedOutput1))
+-- True
+exampleInput1 = [|do x <- getInput
+                     yz <- split x
+                     add yz
+                 |]
 
-exampleOutput1 :: Category k => k Int Int
-exampleOutput1 = split >>> add
+expectedOutput1 :: TExpQ (Int -> Int)
+expectedOutput1 = [||split >>> add||]
+
+actualOutput1 :: ExpQ
+actualOutput1 = generate exampleInput1
 
 
 -- exampleInput2 = do
@@ -146,4 +155,4 @@ exampleOutput9 = splitEither >>> second op >>> first op >>> swap >>> joinEither
 -- >>> main
 -- typechecks.
 main :: IO ()
-main = putStrLn $(generate)
+main = putStrLn "typechecks."
