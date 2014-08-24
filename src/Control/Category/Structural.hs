@@ -10,13 +10,13 @@ import Control.Categorical.Bifunctor
 import Control.Category.Associative
 
 
-class Bifunctor k p => Weaken k p where
+class Bifunctor p k => Weaken p k where
     -- fst :: (a,b) ~> a
     -- snd :: (a,b) ~> b
     fst :: k (p a b) a
     snd :: k (p a b) b
 
-class Bifunctor k p => Contract k p where
+class Bifunctor p k => Contract p k where
     -- (&&&) :: (a ~> b1) -> (a ~> b2) -> a ~> (b1,b2)
     (&&&) :: k a b1 -> k a b2 -> k a (p b1 b2)
     f1 &&& f2 = diag >>> f1 *** f2
@@ -25,23 +25,23 @@ class Bifunctor k p => Contract k p where
     diag :: k a (p a a)
     diag = id &&& id
 
-class Bifunctor k p => Symmetric k p where
+class Bifunctor p k => Symmetric p k where
     -- swap :: (a,b) ~> (b,a)
     swap :: k (p a b) (p b a)
 
-class (Associative k p, Symmetric k p) => Exchange k p
+class (Associative p k, Symmetric p k) => Exchange p k
 
 
-instance Weaken (->) (,) where
+instance Weaken (,) (->) where
     fst (x,_) = x
     snd (_,y) = y
-instance Contract (->) (,) where
+instance Contract (,) (->) where
     diag x = (x,x)
-instance Symmetric (->) (,) where
+instance Symmetric (,) (->) where
     swap (x,y) = (y,x)
-instance Exchange (->) (,)
+instance Exchange (,) (->)
 
-instance Symmetric (->) Either where
+instance Symmetric Either (->) where
     swap (Left  x) = Right x
     swap (Right y) = Left  y
-instance Exchange (->) Either
+instance Exchange Either (->)

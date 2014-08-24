@@ -2,20 +2,16 @@
 {-# LANGUAGE DefaultSignatures, FunctionalDependencies, MultiParamTypeClasses #-}
 module Control.Category.Cartesian where
 
-import Control.Category
-import Data.Void
-
-import Control.Category.Associative
 import Control.Category.Monoidal
 import Control.Category.Structural
 
 
-class ( Weaken k p
-      , Contract k p
-      , Exchange k p
-      , Monoidal k p i
+class ( Weaken p k
+      , Contract p k
+      , Exchange p k
+      , Monoidal i p k
       )
-   => Cartesian k p i
-    | k p -> i
+   => Cartesian i p k
+    | p k -> i
 
-instance Cartesian (->) (,) ()
+instance Cartesian () (,) (->)

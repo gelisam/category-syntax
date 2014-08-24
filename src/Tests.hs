@@ -88,10 +88,10 @@ consumeJunk1 = undefined
 consumeJunk2 :: Category k => k ((),Int) Int
 consumeJunk2 = undefined
 
-class Bifunctor k p => Braided k p where
+class Bifunctor p k => Braided p k where
     braid :: k (p a b) (p b a)
 
-instance Braided (->) Either where
+instance Braided Either (->) where
     braid = undefined
 
 
@@ -170,7 +170,7 @@ test4 = syntax [|do
     add (z,y)
   |]
 
-typeTest4 :: Symmetric k (,) => k Int Int
+typeTest4 :: Symmetric (,) k => k Int Int
 typeTest4 = $(syntax [|do
     x <- getInput
     (y,z) <- split x
@@ -188,7 +188,7 @@ test5 = syntax [|do
     add (y',z)
   |]
 
-typeTest5 :: PFunctor k Either => k Int Int
+typeTest5 :: PFunctor Either k => k Int Int
 typeTest5 = $(syntax [|do
     x <- getInput
     (y,z) <- split x
@@ -207,7 +207,7 @@ test6 = syntax [|do
     joinEither (y,z')
   |]
 
-typeTest6 :: PFunctor k Either => k Int Int
+typeTest6 :: PFunctor Either k => k Int Int
 typeTest6 = $(syntax [|do
     x <- getInput
     (y,z) <- splitEither x
@@ -222,7 +222,7 @@ typeTest6 = $(syntax [|do
 --     z' <- op <- z
 --     joinEither (y,z')
 
-exampleOutput5 :: QFunctor k Either => k Int Int
+exampleOutput5 :: QFunctor Either k => k Int Int
 exampleOutput5 = splitEither >>> second op >>> joinEither
 
 
@@ -231,7 +231,7 @@ exampleOutput5 = splitEither >>> second op >>> joinEither
 --     (y,z) <- splitEither x
 --     joinEither (z,y)
 
-exampleOutput6 :: Symmetric k Either => k Int Int
+exampleOutput6 :: Symmetric Either k => k Int Int
 exampleOutput6 = splitEither >>> swap >>> joinEither
 
 
@@ -242,7 +242,7 @@ exampleOutput6 = splitEither >>> swap >>> joinEither
 --     z' <- op z
 --     joinEither (z',y')
 
-exampleOutput7 :: Bifunctor k Either => k Int Int
+exampleOutput7 :: Bifunctor Either k => k Int Int
 exampleOutput7 = splitEither >>> first op >>> second op >>> joinEither
 
 
@@ -254,7 +254,7 @@ exampleOutput7 = splitEither >>> first op >>> second op >>> joinEither
 --     z'' <- op z'
 --     joinEither (z'',y'')
 
-exampleOutput8 :: Braided (->) Either => Int -> Int
+exampleOutput8 :: Braided Either (->) => Int -> Int
 exampleOutput8 = splitEither >>> first op >>> braid >>> first op >>> joinEither
 
 
@@ -265,5 +265,5 @@ exampleOutput8 = splitEither >>> first op >>> braid >>> first op >>> joinEither
 --     y' <- op y
 --     joinEither (z',y')
 
-exampleOutput9 :: Symmetric k Either => k Int Int
+exampleOutput9 :: Symmetric Either k => k Int Int
 exampleOutput9 = splitEither >>> second op >>> first op >>> swap >>> joinEither

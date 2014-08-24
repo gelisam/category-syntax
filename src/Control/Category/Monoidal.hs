@@ -11,55 +11,55 @@ import Control.Category.Associative
 import Control.Category.Structural
 
 
-class Category k => HasLeftIdentity k p i | k p -> i where
+class Category k => HasLeftIdentity i p k | p k -> i where
     -- idl :: ((),a) ~> a
     -- coidl :: a ~> ((),a)
     idl :: k (p i a) a
     coidl :: k a (p i a)
     
-    default idl :: Weaken k p => k (p i a) a
+    default idl :: Weaken p k => k (p i a) a
     idl = snd
 
-class Category k => HasRightIdentity k p i | k p -> i where
+class Category k => HasRightIdentity i p k | p k -> i where
     -- idr :: (a,()) ~> a
     -- coidr :: a ~> (a,())
     idr :: k (p a i) a
     coidr :: k a (p a i)
     
-    default idr :: (Symmetric k p, HasIdentity k p i) => k (p a i) a
+    default idr :: (Symmetric p k, HasIdentity i p k) => k (p a i) a
     idr = swap >>> idl
     
-    default coidr :: (Symmetric k p, HasIdentity k p i) => k a (p a i)
+    default coidr :: (Symmetric p k, HasIdentity i p k) => k a (p a i)
     coidr = coidl >>> swap
 
-class ( HasLeftIdentity k p i
-      , HasRightIdentity k p i
+class ( HasLeftIdentity i p k
+      , HasRightIdentity i p k
       )
-  => HasIdentity k p i
-   | k p -> i
+  => HasIdentity i p k
+   | p k -> i
 
-class ( Associative k p
-      , HasIdentity k p i
+class ( Associative p k
+      , HasIdentity i p k
       )
-  => Monoidal k p i
-   | k p -> i
+  => Monoidal i p k
+   | p k -> i
 
 
-instance HasLeftIdentity (->) (,) () where
+instance HasLeftIdentity () (,) (->) where
     idl ((),x) = x
     coidl x = ((),x)
-instance HasRightIdentity (->) (,) () where
-instance HasIdentity (->) (,) ()
-instance Monoidal (->) (,) ()
+instance HasRightIdentity () (,) (->) where
+instance HasIdentity () (,) (->)
+instance Monoidal () (,) (->)
 
-instance HasLeftIdentity (->) Either Void where
+instance HasLeftIdentity Void Either (->) where
     idl (Left bot) = absurd bot
     idl (Right  x) = x
     coidl x = Right x
-instance HasRightIdentity (->) Either Void where
-instance HasIdentity (->) Either Void
-instance Monoidal (->) Either Void
+instance HasRightIdentity Void Either (->) where
+instance HasIdentity Void Either (->)
+instance Monoidal Void Either (->)
 
-instance HasLeftIdentity (->) (->) () where
+instance HasLeftIdentity () (->) (->) where
     idl = ($ ())
     coidl x () = x
