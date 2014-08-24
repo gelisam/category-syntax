@@ -38,6 +38,16 @@ In the above example, two structural rules have been used: associativity and com
 
 One important feature of Category-Syntax is that is supports more than one set of rules. For example, if you write code which uses a variable more than once, then the variable will be duplicated via the `diag` method, which will impose a [`Contract`](https://github.com/gelisam/category-syntax/blob/master/src/Control/Category/Structural.hs) constraint on the generated code. If you try to use a variable more than once in a context which doesn't support the contraction rule, you will get a type error.
 
+## Should I use Category-Syntax?
+
+Most DSLs are monads. Use do-notation if you can.
+
+If your language is not a `Monad`, then it's probably an `Applicative`. Use `<$>` and `<*>` if you can.
+
+If your language is not a `Monad` nor an `Applicative`, then your language is probably a `Category`. Now we're talking! In general, if your language is implemented by a datatype which is more than a `Category` but less than an `Arrow`, then programs in your language will probably be more readable if they use Category-Syntax.
+
+If your language is no more powerful than a `Category`, then Category-Syntax can still be used to give names to the intermediate states, but the ordinary pointfree version would be shorter and probably more readable. If your language is as powerful or more powerful than an `Arrow`, then the existing Arrow notation will probably be a better match, unless your product type is not `(,)`, in which case your language would still benefit from Category-Syntax.
+
 ## Examples
 ### Seven Trees
 
