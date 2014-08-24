@@ -101,3 +101,76 @@ iso = $(syntax [|
 ```
 
 In order for the above to be a valid isomorphism, each variable must be used exactly once. Since `Bij` does not have a `Contract` instance, the fact that the above type-checks guarantees that variables match-up correctly.
+
+### Knots
+
+Another great Sigfpe post is about [untangling knots](http://blog.sigfpe.com/2008/08/untangling-with-continued-fractions_16.html). He uses do-notation to represent a knot as a collection of curves and overlapping sections:
+
+```haskell
+example (a,b) = do
+  (c,d) <- over (a,b)
+  (e,f) <- cap
+  (g,h) <- over (c,e)
+  (i,j) <- over (f,d)
+  (m,n) <- cap
+  (k,l) <- cap
+  (q,r) <- over (h,k)
+  (s,y) <- over (l,i)
+  (o,p) <- over (n,g)
+  (t,u) <- under (p,q)
+  (v,w) <- under (r,s)
+  (x,z) <- over (y,j)
+  cup (o,t)
+  cup (u,v)
+  cup (w,x)
+  return (m,z)
+```
+
+We give names to the strands coming out of each section, and we use each name exactly once as part of the arguments for the next section in which the strand takes part.
+
+With so many variables, it is easy for a typo to cause a variable to be used more than once, but with do-notation, the mistake will not be caught. Let's use Category-Syntax to create a safer knot-description language.
+
+```haskell
+data KnotSection a b where
+  Over  :: KnotSection (a,b) (b,a)
+  Under :: KnotSection (a,b) (b,a)
+  Cap :: KnotSection () (a,a)
+  Cup :: KnotSection (a,a) ()
+
+type Knot = Linear KnotSection
+over = linear Over
+under = linear Under
+cap = linear Cap
+cup = linear Cup
+```
+
+The datatype `KnotSection` is not itself a `Category`, because it only represents the ways in which strands can be combined, not the way in which those combinations can be composed. With `Linear`, we build a free symmetric monoidal category, which is a mathematical way of saying that variables must be used exactly once, except for variables of type `()`.
+
+We can now describe our knot using almost the same code as before, except this time we can't accidentally drop or reuse a variable:
+
+```haskell
+example' :: Knot (a,b) (m,z)
+example' = $(syntax [|do
+    (a,b) <- getInput
+    (c,d) <- over (a,b)
+    (e,f) <- cap ()
+    (g,h) <- over (c,e)
+    (i,j) <- over (f,d)
+    (m,n) <- cap ()
+    (k,l) <- cap ()
+    (q,r) <- over (h,k)
+    (s,y) <- over (l,i)
+    (o,p) <- over (n,g)
+    (t,u) <- under (p,q)
+    (v,w) <- under (r,s)
+    (x,z) <- over (y,j)
+    () <- cup (o,t)
+    () <- cup (u,v)
+    () <- cup (w,x)
+    returnC (m,z)
+  |]
+```
+
+## Installation
+
+To install the development version, clone this repository and use `cabal install` to compile Category-Syntax and its dependencies.
