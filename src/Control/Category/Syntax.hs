@@ -122,7 +122,7 @@ listVars :: Vars -> Names
 listVars (Var x) = [x]
 listVars (Pair x y) = listVars x ++ listVars y
 
--- Make preconditions list all the variables available at this point,
+-- Make preconditions list all the variables created before this point,
 -- and postconditions list all the variables needed afterwards.
 allVars :: Pipeline Vars -> Pipeline AllVars
 allVars (Pipeline {..}) = Pipeline (initialCond, noVars)
