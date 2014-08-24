@@ -52,7 +52,7 @@ data Tree a = Leaf a | Branch (Tree a) (Tree a)
 tree :: Bij (Tree a) (Either a (Tree a, Tree a))
 ```
 
-In his blog post, Sigfpe implements `commute`, `associate`, `associate'`, and `liftLeft`. These correspond to the structural operations `swap`, `associate`, coassociate`, and `first`, which we need to implement ourselves because we are using a custom category.
+In his blog post, Sigfpe implements `commute`, `associate`, `associate'`, and `liftLeft`. These correspond to the structural operations `swap`, `associate`, `coassociate`, and `first`, which we need to implement ourselves because we are using a custom category.
 
 ```haskell
 instance PFunctor Bij Either where first = ...
