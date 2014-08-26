@@ -12,6 +12,18 @@ import Control.Category.Associative
 import Control.Category.Structural
 
 
+-- At first it might look a bit strange that @HasLeftIdentity@ is a functor in
+-- its right argument instead of its left argument, but it makes sense: when
+-- the left-hand-side is @()@, we can implement @second@ as follows:
+-- 
+-- > second f = idl >>> f >>> coidl
+-- 
+-- The @QFunctor@ constraint states that if there are other ways to obtain
+-- pairs, those pairs must also support @second@.
+-- 
+-- Another argument is that (->) is a QFunctor but not a PFunctor, and it only
+-- has a left identity.
+
 class QFunctor p k => HasLeftIdentity i p k | p k -> i where
     -- idl :: ((),a) ~> a
     -- coidl :: a ~> ((),a)
