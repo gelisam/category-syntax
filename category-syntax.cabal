@@ -28,7 +28,6 @@ library
                      , Control.Category.Structural
                      , Control.Category.Structural.Free
                      , Control.Category.Syntax
-                     , Tests
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.8
