@@ -7,11 +7,12 @@ import Prelude hiding (fst, snd)
 import Control.Category
 import Data.Void
 
+import Control.Categorical.Bifunctor
 import Control.Category.Associative
 import Control.Category.Structural
 
 
-class Category k => HasLeftIdentity i p k | p k -> i where
+class QFunctor p k => HasLeftIdentity i p k | p k -> i where
     -- idl :: ((),a) ~> a
     -- coidl :: a ~> ((),a)
     idl :: k (p i a) a
@@ -20,7 +21,7 @@ class Category k => HasLeftIdentity i p k | p k -> i where
     default idl :: Weaken p k => k (p i a) a
     idl = snd
 
-class Category k => HasRightIdentity i p k | p k -> i where
+class PFunctor p k => HasRightIdentity i p k | p k -> i where
     -- idr :: (a,()) ~> a
     -- coidr :: a ~> (a,())
     idr :: k (p a i) a
@@ -32,7 +33,8 @@ class Category k => HasRightIdentity i p k | p k -> i where
     default coidr :: (Symmetric p k, HasIdentity i p k) => k a (p a i)
     coidr = coidl >>> swap
 
-class ( HasLeftIdentity i p k
+class ( Bifunctor p k
+      , HasLeftIdentity i p k
       , HasRightIdentity i p k
       )
   => HasIdentity i p k
