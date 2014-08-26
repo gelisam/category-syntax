@@ -10,7 +10,7 @@ rearrange :: Either (Either a1 a2) (Either b1 b2)
 rearrange = $(syntax [|do
     ((x1,x2), (y1,y2)) <- getInput
     returnC ((x1,y1), (x2,y2))
-  |]
+  |])
 ```
 
 Which should expand to this:
@@ -97,7 +97,7 @@ iso = $(syntax [|
     t6                    <- inverse tree (          t5, t7)
     t7                    <- inverse tree (            t6, t8)
     returnC t7
-  |]
+  |])
 ```
 
 In order for the above to be a valid isomorphism, each variable must be used exactly once. Since `Bij` does not have a `Contract` instance, the fact that the above type-checks guarantees that variables match-up correctly.
@@ -168,7 +168,7 @@ example' = $(syntax [|do
     () <- cup (u,v)
     () <- cup (w,x)
     returnC (m,z)
-  |]
+  |])
 ```
 
 ## Installation
