@@ -17,10 +17,16 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Control.Categorical.Bifunctor
+                     , Control.Categorical.Bifunctor.Free
                      , Control.Category.Associative
+                     , Control.Category.Associative.Free
                      , Control.Category.Cartesian
+                     , Control.Category.Cartesian.Free
+                     , Control.Category.Free
                      , Control.Category.Monoidal
+                     , Control.Category.Monoidal.Free
                      , Control.Category.Structural
+                     , Control.Category.Structural.Free
                      , Control.Category.Syntax
                      , Tests
   -- other-modules:       
