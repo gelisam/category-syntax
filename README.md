@@ -74,19 +74,20 @@ If your language admits an `Arrow` instance, then you will have no trouble imple
 GHC already has a [syntax for Arrows](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24585232). Arrow syntax is very similar to ours, except that it uses a `(-<)` delimiter instead of function application. One important feature of Arrow notation is that the right-hand side of the `(-<)` delimiter can be an arbitrary expression:
 
 ```haskell
-proc x -> do
-        y <- f -< x+1
-        g -< 2*y
-        let z = x+y
-        t <- h -< x*z
-        returnA -< t+z
+arrowExample = proc x -> do y <- f -< x+1
+                            g -< 2*y
+                            let z = x+y
+                            t <- h -< x*z
+                            returnA -< t+z
 ```
 
 Without this feature, Category-Syntax is necessarily more verbose, because all the calls to `arr` must be written out explicitly. Instead of allowing arbitrary expressions, all right-hand sides must be variables, nested pairs of variables, or `()`.
 
 ```haskell
+arr2 :: Arrow f => (a -> b -> c) -> f (a,b) c
 arr2 = arr . uncurry
-$(syntax [|do
+
+arrowExample = $(syntax [|do
     x <- getInput
     y <- f . arr (+1) $ x
     () <- g . arr (2*) $ y
@@ -244,6 +245,8 @@ example' = $(syntax [|do
     returnC (m,z)
   |])
 ```
+
+### Reference Counting
 
 ## Installation
 
