@@ -69,7 +69,7 @@ roundNearest = (+ 0.5) >>> floor >>> fromInteger
 
 ### Arrow
 
-If your language admits an `Arrow` instance, then you will have no trouble implementing all the structural rules in terms of `arr`. However, you won't gain much from the exercise.
+If your language admits an `Arrow` instance, then you will have no trouble implementing all the structural rules in terms of `arr`. However, you probably won't gain much from the exercise.
 
 GHC already has a [syntax for Arrows](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24585232). Arrow syntax is very similar to ours, except that it uses a `(-<)` delimiter instead of function application. One important feature of Arrow notation is that the right-hand side of the `(-<)` delimiter can be an arbitrary expression:
 
