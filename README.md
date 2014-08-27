@@ -65,6 +65,7 @@ But the ordinary pointfree version will be shorter and probably more readable.
 ```haskell
 roundNearest :: Double -> Double
 roundNearest = (+ 0.5) >>> floor >>> fromInteger
+```
 
 ### Arrow
 
