@@ -46,7 +46,80 @@ If your language is not a `Monad`, then it's probably an `Applicative`. Use `<$>
 
 If your language is not a `Monad` nor an `Applicative`, then your language is probably a `Category`. Now we're talking! In general, if your language is implemented by a datatype which is more than a `Category` but less than an `Arrow`, then programs in your language will probably be more readable if they use Category-Syntax.
 
-If your language is no more powerful than a `Category`, then Category-Syntax can still be used to give names to the intermediate states, but the ordinary pointfree version would be shorter and probably more readable. If your language is as powerful or more powerful than an `Arrow`, then the existing Arrow notation will probably be a better match, as long as your product type is `(,)`. Otherwise, your language would still benefit from Category-Syntax because our version of `first` is polymorphic in the product type, as do `associate` and the other implicit methods. In particular, as the `rearrange` example above demonstrates, they also work with sum types.
+### Category
+
+If your language is no more powerful than a `Category`, then Category-Syntax can still be used to give names to the intermediate states:
+
+```haskell
+roundNearest :: Double -> Double
+roundNearest = $(syntax [|do
+    myDouble <- getInput
+    myDouble' <- (+ 0.5) myDouble
+    myInteger <- floor myDouble'
+    fromInteger myInteger
+  |])
+```
+
+But the ordinary pointfree version will be shorter and probably more readable.
+
+```haskell
+roundNearest :: Double -> Double
+roundNearest = (+ 0.5) >>> floor >>> fromInteger
+
+### Arrow
+
+If your language admits an `Arrow` instance, then you will have no trouble implementing all the structural rules in terms of `arr`. However, you won't gain much from the exercise.
+
+GHC already has a [syntax for Arrows](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24585232). Arrow syntax is very similar to that of Category Syntax, except that it uses a `(-<)` delimiter instead of function application. One important feature of Arrow notation is that the right-hand side of the `(-<)` delimiter can be an arbitrary expression:
+
+```haskell
+proc x -> do
+        y <- f -< x+1
+        g -< 2*y
+        let z = x+y
+        t <- h -< x*z
+        returnA -< t+z
+```
+
+Without this feature, Category Syntax is necessarily more verbose, because all the calls to `arr` must be written out explicitly. Instead of allowing arbitrary expressions, all right-hand sides must be variables, nested pairs of variables, or `()`.
+
+```haskell
+arr2 = arr . uncurry
+$(syntax [|do
+    x <- getInput
+    y <- f . arr (+1) $ x
+    () <- g . arr (2*) $ y
+    z <- arr2 (+) $ (x,y)
+    t <- h . arr2 (*) $ (x,z)
+    returnC . arr2 (+) $ (t,z)
+  |])
+```
+
+The reason we accept pairs but not arbitrary expressions is that in Category Syntax, a pair of variables does _not_ represent a pair of values. Instead, it represents the two sides of any [bifunctor](https://github.com/gelisam/category-syntax/blob/master/src/Control/Categorical/Bifunctor.hs).
+
+If the bifunctor is `(,)`, then the pair does represent a pair of values, but if the bifunctor is `Either`, for example, then each variable of the pair represents a branch. Here is `rearrange` again, demonstrating how manipulating branches using variables can be much more succinct than listing all the possible constructor combinations.
+
+```haskell
+rearrange :: Either (Either a1 a2) (Either b1 b2)
+          -> Either (Either a1 b1) (Either a2 b2)
+rearrange = $(syntax [|do
+    ((x1,x2), (y1,y2)) <- getInput
+    returnC ((x1,y1), (x2,y2))
+  |])
+```
+
+You can mix pairs representing different kinds of bifunctors in the same Category Syntax block, but I don't recommended it. It quickly becomes hard to track which pairs represent which bifunctor, and it is easy to accidentally `associate` across incompatible bifunctors:
+
+```haskell
+-- type error
+impossible :: (Either a b, c) -> Either a (b, c)
+impossible = $(syntax [|do
+    ((x,y), z) <- getInput
+    returnC (x, (y,z))
+  |])
+```
+
+If the two bifunctors you would like to mix are `(,)` and `Either`, then the [`ArrowChoice` notation](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24603360) is likely to be much more readable than Category Syntax.
 
 ## Examples
 ### Seven Trees
