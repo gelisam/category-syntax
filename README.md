@@ -1,4 +1,4 @@
-# Category Syntax
+# Category-Syntax
 
 (work in progress)
 
@@ -71,7 +71,7 @@ roundNearest = (+ 0.5) >>> floor >>> fromInteger
 
 If your language admits an `Arrow` instance, then you will have no trouble implementing all the structural rules in terms of `arr`. However, you won't gain much from the exercise.
 
-GHC already has a [syntax for Arrows](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24585232). Arrow syntax is very similar to that of Category Syntax, except that it uses a `(-<)` delimiter instead of function application. One important feature of Arrow notation is that the right-hand side of the `(-<)` delimiter can be an arbitrary expression:
+GHC already has a [syntax for Arrows](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24585232). Arrow syntax is very similar to that of Category-Syntax, except that it uses a `(-<)` delimiter instead of function application. One important feature of Arrow notation is that the right-hand side of the `(-<)` delimiter can be an arbitrary expression:
 
 ```haskell
 proc x -> do
@@ -82,7 +82,7 @@ proc x -> do
         returnA -< t+z
 ```
 
-Without this feature, Category Syntax is necessarily more verbose, because all the calls to `arr` must be written out explicitly. Instead of allowing arbitrary expressions, all right-hand sides must be variables, nested pairs of variables, or `()`.
+Without this feature, Category-Syntax is necessarily more verbose, because all the calls to `arr` must be written out explicitly. Instead of allowing arbitrary expressions, all right-hand sides must be variables, nested pairs of variables, or `()`.
 
 ```haskell
 arr2 = arr . uncurry
@@ -96,7 +96,7 @@ $(syntax [|do
   |])
 ```
 
-The reason we accept pairs but not arbitrary expressions is that in Category Syntax, a pair of variables does _not_ represent a pair of values. Instead, it represents the two sides of any [bifunctor](https://github.com/gelisam/category-syntax/blob/master/src/Control/Categorical/Bifunctor.hs).
+The reason we accept pairs but not arbitrary expressions is that in Category-Syntax, a pair of variables does _not_ represent a pair of values. Instead, it represents the two sides of any [bifunctor](https://github.com/gelisam/category-syntax/blob/master/src/Control/Categorical/Bifunctor.hs).
 
 If the bifunctor is `(,)`, then the pair does represent a pair of values, but if the bifunctor is `Either`, for example, then each variable of the pair represents a branch. Here is `rearrange` again, demonstrating how manipulating branches using variables can be much more succinct than listing all the possible constructor combinations.
 
@@ -109,7 +109,7 @@ rearrange = $(syntax [|do
   |])
 ```
 
-You can mix pairs representing different kinds of bifunctors in the same Category Syntax block, but I don't recommended it. It quickly becomes hard to track which pairs represent which bifunctor, and it is easy to accidentally `associate` across incompatible bifunctors:
+You can mix pairs representing different kinds of bifunctors in the same Category-Syntax block, but I don't recommended it. It quickly becomes hard to track which pairs represent which bifunctor, and it is easy to accidentally `associate` across incompatible bifunctors:
 
 ```haskell
 -- type error
@@ -120,7 +120,7 @@ impossible = $(syntax [|do
   |])
 ```
 
-If the two bifunctors you would like to mix are `(,)` and `Either`, then the [`ArrowChoice` notation](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24603360) is likely to be much more readable than Category Syntax.
+If the two bifunctors you would like to mix are `(,)` and `Either`, then the [`ArrowChoice` notation](http://www.haskell.org/ghc/docs/7.8.3/html/users_guide/arrow-notation.html#idp24603360) is likely to be much more readable than Category-Syntax.
 
 ## Examples
 ### Seven Trees
