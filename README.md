@@ -47,7 +47,7 @@ If your language is not a `Monad`, then it's probably an `Applicative`. Use `<$>
 If your language is not a `Monad` nor an `Applicative`, then your language is probably a `Category`. Now we're talking! In general, if your language is implemented by a datatype which is more than a `Category` but less than an `Arrow`, then programs in your language will probably be more readable if they use Category-Syntax.
 
 ## Examples
-### Seven Trees
+### Bijections
 
 Let's implement the famous ["seven trees in one"](http://blog.sigfpe.com/2007/09/arboreal-isomorphisms-from-nuclear.html) isomorphism. We will need a `Category` for isomorphisms, and a data structure for trees:
 
@@ -100,7 +100,7 @@ iso = $(syntax [|
 
 In order for the above to be a valid isomorphism, each variable must be used exactly once. Since `Bij` does not have a `Contract` instance, the fact that the above type-checks guarantees that variables match-up correctly.
 
-### Knots
+### Wire Diagrams
 
 Another great Sigfpe post is about [untangling knots](http://blog.sigfpe.com/2008/08/untangling-with-continued-fractions_16.html). He uses do-notation to represent a knot as a collection of curves and overlapping sections:
 
