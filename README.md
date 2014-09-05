@@ -277,7 +277,7 @@ instance Weaken (,) RefCounted where
         releaseResource y
         return x
     snd = RefCounted $ \(x,y) -> do
-        releaseResource y
+        releaseResource x
         return y
 ```
 
