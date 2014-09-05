@@ -49,7 +49,9 @@ If your language is not a `Monad` nor an `Applicative`, then your language is pr
 ## Examples
 ### Bijections
 
-Let's implement the famous ["seven trees in one"](http://blog.sigfpe.com/2007/09/arboreal-isomorphisms-from-nuclear.html) isomorphism. We will need a `Category` for isomorphisms, and a data structure for trees:
+Let's implement the famous ["seven trees in one"](http://blog.sigfpe.com/2007/09/arboreal-isomorphisms-from-nuclear.html) isomorphism. Sigfpe's post on the subject is very readable, but since the isomorphism requires a large number of steps, the code he builds is unfortunately quite long and hard to read. With Category-Syntax, we can do much better.
+
+We will need a `Category` for isomorphisms, and a data structure for trees:
 
 ```haskell
 data Bij a b = Bij (a -> b) (b -> a)
@@ -70,7 +72,7 @@ instance Symmetric Bij Either where swap = ...
 instance Associative Bij Either where ...
 ```
 
-Now that we have implemented those structural rules, we can let Category-Syntax figure out when they need to be used. This allows us to write a much more readable solution than in Sigfpe's otherwise great post.
+Now that we have implemented those structural rules, we can let Category-Syntax figure out when they need to be used. This greatly simplifies the code for describing the isomorphism, as we can now focus on the calls to `tree` and `inverse tree` instead of having to constantly rearrange the variables like in Sigfpe's version.
 
 ```haskell
 iso :: Bij T1 T7
