@@ -248,14 +248,11 @@ example' = $(syntax [|do
 
 ### Reference Counting
 
-When a variable is dropped or reused, Category-Syntax inserts the corresponding structural operation between two user actions. By interpreting those structural operations accordingly, it should be possible to determine when a resource is last used, so it can be freed as early as possible.
+When a variable is dropped or reused, Category-Syntax inserts the corresponding structural operation between two user actions. By interpreting those structural operations accordingly, it should be possible to determine when a resource is last used, so it can be released as early as possible.
 
-For simplicity, let's focus on finding the last use of a particular variable. That is, if the variable isn't used at all, we want to free our resource immediately after the variable is bound, and if the variable is used as input to a few user actions, we want to free our resource immediately after the last of those actions.
+For simplicity, let's restrict our attention to a single variable. That is, if the variable isn't used at all, we want to free our resource immediately after the variable is bound, and if the variable is used as input to a few user actions, we want to free our resource immediately after the last of those actions.
 
-One difficulty is that a variable is only considered to be dropped if the variable isn't used at all. Otherwise, the variable is duplicated a few times, and each copy is consumed by a user action. For this reason, we will use reference counting to compute how many copies of the variable have been consumed, and if there are any unused copies left.
-
-In order to restrict our attention to a single variable, let's postulate a toy language in which every user action yields `()`.
-
+For concreteness, here is a toy language in which there can only be one variable in scope, because every user action yields `()`.
 
 ```haskell
 refCountExample :: RefCounted Int ()
@@ -293,7 +290,7 @@ instance Contract (,) RefCounted where
         return (x,x)
 ```
 
-Finally, the last time a variable is used, the variable gets consumed. There is no special structural operation for variable consumption, so we need every possible user action to decrement the counter and possibly release the resource. In the case of our toy language, there is only one:
+Finally, the last time a variable is used, the variable gets consumed by the user action. There is no special structural operation for variable consumption, so we need every possible user action to decrement the counter and possibly release the resource. In the case of our toy language, there is only one:
 
 ```haskell
 useVar :: RefCounted Int ()
