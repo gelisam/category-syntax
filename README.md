@@ -248,6 +248,64 @@ example' = $(syntax [|do
 
 ### Reference Counting
 
+When a variable is dropped or reused, Category-Syntax inserts the corresponding structural operation between two user actions. By interpreting those structural operations accordingly, it should be possible to determine when a resource is last used, so it can be freed as early as possible.
+
+For simplicity, let's focus on finding the last use of a particular variable. That is, if the variable isn't used at all, we want to free our resource immediately after the variable is bound, and if the variable is used as input to a few user actions, we want to free our resource immediately after the last of those actions.
+
+One difficulty is that a variable is only considered to be dropped if the variable isn't used at all. Otherwise, the variable is duplicated a few times, and each copy is consumed by a user action. For this reason, we will use reference counting to compute how many copies of the variable have been consumed, and if there are any unused copies left.
+
+In order to restrict our attention to a single variable, let's postulate a toy language in which every user action yields `()`.
+
+
+```haskell
+refCountExample :: RefCounted Int ()
+refCountExample = $(syntax [|do
+    x <- getInput
+    () <- noop ()
+    () <- useVar x
+    () <- useVar x
+    () <- noop
+    () <- useVar x
+    -- the resource should be released here
+    () <- noop
+    () <- noop
+  |])
+```
+
+Let's begin with the easy case: if a variable is never used, a call to `fst` or `snd` is inserted immediately after the variable is bound. That's our cue for releasing the resource:
+
+```haskell
+instance Weaken (,) RefCounted where
+    fst = RefCounted $ \(x,y) -> do
+        releaseResource y
+        return x
+    snd = RefCounted $ \(x,y) -> do
+        releaseResource y
+        return y
+```
+
+If a variable is used at least once, then a call to `diag` is inserted before all uses of the variable except for the last. This call creates a copy of the variable, so that's our cue for increasing its reference count. We assume that the internal representation of `RefCounted` has methods for incrementing and decrementing a dedicated counter.
+
+```haskell
+instance Contract (,) RefCounted where
+    diag = RefCounted $ \x -> do
+        increaseCounter x
+        return (x,x)
+```
+
+Finally, the last time a variable is used, the variable gets consumed. There is no special structural operation for variable consumption, so we need every possible user action to decrement the counter and possibly release the resource. In the case of our toy language, there is only one:
+
+```haskell
+useVar :: RefCounted Int ()
+useVar = RefCounted $ \x -> do
+    r <- reallyUseVar x
+    decreaseCounter x
+    remaining <- readCounter x
+    when (x == 0) $ do
+      releaseResource x
+    return r
+```
+
 ## Installation
 
 To install the development version, clone this repository and use `cabal install` to compile Category-Syntax and its dependencies.
