@@ -1,10 +1,6 @@
 module Control.Category.Syntax.Types where
 
-import Data.List
 import Language.Haskell.TH
-import Text.Printf
-
-import Control.Category.Structural
 
 
 -- A simpler representation for nested tuples of variables.

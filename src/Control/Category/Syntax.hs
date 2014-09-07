@@ -4,11 +4,9 @@ module Control.Category.Syntax (getInput, returnC, syntax) where
 import Prelude hiding (id, (.))
 
 import Control.Category
-import Data.List
 import Language.Haskell.TH
 import Text.Printf
 
-import Control.Category.Structural
 import Control.Category.Syntax.Names
 import Control.Category.Syntax.Parse
 import Control.Category.Syntax.Return
@@ -27,8 +25,8 @@ convertDo = continue . begin
 --            |]
 -- (x, cmds)
 begin :: Exp -> (Pat, [Stmt])
-begin (DoE (BindS x (VarE getInput):cmds))
-  | getInput == getInputName
+begin (DoE (BindS x (VarE getInput'):cmds))
+  | getInput' == getInputName
   = (x, cmds)
 begin e = error msg
   where

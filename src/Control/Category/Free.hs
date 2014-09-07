@@ -1,8 +1,6 @@
 {-# LANGUAGE GADTs, TypeSynonymInstances #-}
 module Control.Category.Free where
 
-import Prelude hiding (id, (.))
-
 import Control.Category
 
 

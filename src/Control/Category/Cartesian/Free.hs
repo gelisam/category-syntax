@@ -1,8 +1,6 @@
 {-# LANGUAGE FlexibleInstances, GADTs, MultiParamTypeClasses #-}
 module Control.Category.Cartesian.Free where
 
-import Prelude hiding (id, (.), fst, snd)
-
 import Control.Category
 
 import Control.Categorical.Bifunctor

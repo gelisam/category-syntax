@@ -1,8 +1,6 @@
 {-# LANGUAGE FlexibleInstances, GADTs, MultiParamTypeClasses #-}
 module Control.Category.Associative.Free where
 
-import Prelude hiding (id, (.))
-
 import Control.Category
 
 import Control.Categorical.Bifunctor

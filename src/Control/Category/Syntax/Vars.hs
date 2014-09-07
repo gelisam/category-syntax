@@ -1,14 +1,9 @@
 {-# LANGUAGE RecordWildCards #-}
 module Control.Category.Syntax.Vars where
 
-import Prelude hiding (id, (.))
-
-import Control.Category
 import Data.List
 import Language.Haskell.TH
-import Text.Printf
 
-import Control.Category.Structural
 import Control.Category.Syntax.Types
 
 
@@ -24,11 +19,11 @@ listVars (Pair x y) = listVars x ++ listVars y
 allVars :: Pipeline Vars -> Pipeline AllVars
 allVars (Pipeline {..}) = Pipeline (initialCond, noVars)
                                    intermediateSteps'
-                                   (finalCond, allVars)
+                                   (finalCond, allVars')
                                    finalCommand
   where
     noVars = []
-    (intermediateSteps', allVars) = go noVars intermediateSteps
+    (intermediateSteps', allVars') = go noVars intermediateSteps
     
     go :: Names -> [Step Vars] -> ([Step AllVars], Names)
     go prevScope [] = ([], prevScope)

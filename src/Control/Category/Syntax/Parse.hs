@@ -1,11 +1,9 @@
 -- | "Parse" from a raw Exp to a more precise type.
 module Control.Category.Syntax.Parse where
 
-import Data.List
 import Language.Haskell.TH
 import Text.Printf
 
-import Control.Category.Structural
 import Control.Category.Syntax.Names
 import Control.Category.Syntax.Types
 

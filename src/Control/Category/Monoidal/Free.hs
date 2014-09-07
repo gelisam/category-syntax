@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances, GADTs, MultiParamTypeClasses #-}
 module Control.Category.Monoidal.Free where
 
-import Prelude hiding (id, (.), fst, snd)
+import Prelude ()
 
 import Control.Category
 
