@@ -74,6 +74,31 @@ instance Associative Bij Either where ...
 
 Now that we have implemented those structural rules, we can let Category-Syntax figure out when they need to be used. This greatly simplifies the code for describing the isomorphism, as we can now focus on the calls to `tree` and `inverse tree` instead of having to constantly rearrange the variables like in Dan's version.
 
+For example, here is one especially hairy section from Dan's implementation.
+
+```haskell
+step15' :: T6 :+ T4 :+ T3 :+ T2 :+ T1 :+ T0 -> T7 :+ T5 :+ T4 :+ T3 :+ T2 :+ T1 :+ T0
+step15' = liftLeft5 (commute . assemble')
+
+shuffle5' :: T7 :+ T5 :+ T4 :+ T3 :+ T2 :+ T1 :+ T0 -> T7 :+ T5 :+ T3 :+ T2 :+ T1 :+ T0 :+ T4
+shuffle5' = swap23 . liftLeft swap23 . liftLeft2 swap23 . liftLeft3 swap23
+
+shuffle4' :: T7 :+ T5 :+ T3 :+ T2 :+ T1 :+ T0 :+ T4 -> T5 :+ T3 :+ T2 :+ T1 :+ T0 :+ T4 :+ T7
+shuffle4' = swap23 . liftLeft swap23 . liftLeft2 swap23 . liftLeft3 swap23 . liftLeft4 swap23 . liftLeft5 commute
+
+step14' :: T5 :+ T3 :+ T2 :+ T1 :+ T0 :+ T4 :+ T7 -> T4 :+ T2 :+ T1 :+ T0 :+ T4 :+ T7
+step14' = liftLeft5 (assemble . commute)
+```
+
+And here is the equivalent part from our Category-Syntax version.
+
+```haskell
+    (t5', t7) <- tree t6'
+    t4' <- inverse tree (t3, t5')
+```
+
+Even with such drastic simplifications, the full seven-trees-in-one isomorphism is still annoyingly long, but at least it's a lot easier to read now.
+
 ```haskell
 iso :: Bij T1 T7
 iso = $(syntax [|
