@@ -28,11 +28,11 @@ library
                      , Control.Category.Structural
                      , Control.Category.Structural.Free
                      , Control.Category.Syntax
-  other-modules:       Control.Category.Syntax.Debug
+  other-modules:       Control.Category.Syntax.Builtin
+                     , Control.Category.Syntax.Debug
                      , Control.Category.Syntax.Names
                      , Control.Category.Syntax.Parse
                      , Control.Category.Syntax.Print
-                     , Control.Category.Syntax.Return
                      , Control.Category.Syntax.Types
                      , Control.Category.Syntax.Vars
   -- other-extensions:    

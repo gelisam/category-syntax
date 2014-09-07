@@ -1,4 +1,4 @@
-module Control.Category.Syntax.Return where
+module Control.Category.Syntax.Builtin where
 
 import Prelude hiding (id, (.))
 

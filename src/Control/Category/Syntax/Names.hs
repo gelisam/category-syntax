@@ -7,7 +7,7 @@ import Control.Category
 import Language.Haskell.TH
 
 import Control.Category.Structural
-import Control.Category.Syntax.Return
+import Control.Category.Syntax.Builtin
 
 
 getInputName :: Name
