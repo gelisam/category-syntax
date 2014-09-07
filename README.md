@@ -245,7 +245,7 @@ instance Weaken (,) RefCounted where
         return y
 ```
 
-If a variable is used at least once, then a call to `diag` is inserted before all uses of the variable except for the last. This call creates a copy of the variable, so that's our cue for increasing its reference count. We assume that the internal representation of `RefCounted` has methods for incrementing and decrementing a dedicated counter.
+If a variable is used at least once, then a call to `diag` is inserted before all uses of the variable except for the last. This call creates a copy of the variable, so that's our cue for increasing its reference count. We assume that the internal representation of `RefCounted` has methods for incrementing and decrementing an associated counter, and that the counter is already initialized to 1.
 
 ```haskell
 instance Contract (,) RefCounted where
