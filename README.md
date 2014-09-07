@@ -280,6 +280,28 @@ useVar = RefCounted $ \x -> do
     return r
 ```
 
+Here is our example code again, with all the intermediate calls added by Category-Syntax.
+
+```haskell
+refCountExample :: RefCounted Int ()
+                                    -- counter starts at 1
+refCountExample = coidl             -- create ()
+              >>> first noop
+              >>> idl               -- drop ()
+              >>> diag              -- increaseCounter, now 2
+              >>> first (useVar x)  -- decreaseCounter, now 1
+              >>> idl               -- drop ()
+              >>> diag              -- increaseCounter, now 2
+              >>> first (useVar x)  -- decreaseCounter, now 1
+              >>> first noop
+              >>> idl               -- drop ()
+              >>> first (useVar x)  -- decreaseCounter, now 0
+                                    -- releaseResource
+              >>> noop
+              >>> noop
+              >>> returnC
+```
+
 ## Installation
 
 To install the development version, clone this repository and use `cabal install` to compile Category-Syntax and its dependencies.
