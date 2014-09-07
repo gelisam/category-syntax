@@ -161,59 +161,59 @@ typeTest3 = $(syntax [|do
   |])
 
 
--- |
--- >>> pprintQ test4
--- split >>> swap >>> add
-test4 = syntax [|do
-    x <- getInput
-    (y,z) <- split x
-    add (z,y)
-  |]
-
-typeTest4 :: Symmetric (,) k => k Int Int
-typeTest4 = $(syntax [|do
-    x <- getInput
-    (y,z) <- split x
-    add (z,y)
-  |])
-
-
--- |
--- >>> pprintQ test5
--- split >>> first op >>> add
-test5 = syntax [|do
-    x <- getInput
-    (y,z) <- split x
-    y' <- op y
-    add (y',z)
-  |]
-
-typeTest5 :: PFunctor Either k => k Int Int
-typeTest5 = $(syntax [|do
-    x <- getInput
-    (y,z) <- split x
-    y' <- op y
-    add (y',z)
-  |])
+-- -- |
+-- -- >>> pprintQ test4
+-- -- split >>> swap >>> add
+-- test4 = syntax [|do
+--     x <- getInput
+--     (y,z) <- split x
+--     add (z,y)
+--   |]
+-- 
+-- typeTest4 :: Symmetric (,) k => k Int Int
+-- typeTest4 = $(syntax [|do
+--     x <- getInput
+--     (y,z) <- split x
+--     add (z,y)
+--   |])
 
 
--- |
--- >>> pprintQ test6
--- splitEither >>> second op >>> joinEither
-test6 = syntax [|do
-    x <- getInput
-    (y,z) <- splitEither x
-    z' <- op z
-    joinEither (y,z')
-  |]
-
-typeTest6 :: PFunctor Either k => k Int Int
-typeTest6 = $(syntax [|do
-    x <- getInput
-    (y,z) <- splitEither x
-    z' <- op z
-    joinEither (y,z')
-  |])
+-- -- |
+-- -- >>> pprintQ test5
+-- -- split >>> first op >>> add
+-- test5 = syntax [|do
+--     x <- getInput
+--     (y,z) <- split x
+--     y' <- op y
+--     add (y',z)
+--   |]
+-- 
+-- typeTest5 :: PFunctor Either k => k Int Int
+-- typeTest5 = $(syntax [|do
+--     x <- getInput
+--     (y,z) <- split x
+--     y' <- op y
+--     add (y',z)
+--   |])
+-- 
+-- 
+-- -- |
+-- -- >>> pprintQ test6
+-- -- splitEither >>> second op >>> joinEither
+-- test6 = syntax [|do
+--     x <- getInput
+--     (y,z) <- splitEither x
+--     z' <- op z
+--     joinEither (y,z')
+--   |]
+-- 
+-- typeTest6 :: PFunctor Either k => k Int Int
+-- typeTest6 = $(syntax [|do
+--     x <- getInput
+--     (y,z) <- splitEither x
+--     z' <- op z
+--     joinEither (y,z')
+--   |])
 
 
 -- exampleInput5 = do
