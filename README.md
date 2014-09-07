@@ -295,7 +295,7 @@ refCountExample = coidl             -- create ()
               >>> first (useVar x)  -- decreaseCounter, now 1
               >>> first noop
               >>> idl               -- drop ()
-              >>> first (useVar x)  -- decreaseCounter, now 0
+              >>> useVar x          -- decreaseCounter, now 0
                                     -- releaseResource
               >>> noop
               >>> noop
