@@ -49,7 +49,7 @@ If your language is not a `Monad` nor an `Applicative`, then your language is pr
 ## Examples
 ### Bijections
 
-Let's implement the famous ["seven trees in one"](http://blog.sigfpe.com/2007/09/arboreal-isomorphisms-from-nuclear.html) isomorphism. Sigfpe's post on the subject is very readable, but since the isomorphism requires a large number of steps, the code he builds is unfortunately quite long and hard to read. With Category-Syntax, we can do much better.
+Let's implement the famous ["seven trees in one"](http://blog.sigfpe.com/2007/09/arboreal-isomorphisms-from-nuclear.html) isomorphism. Dan Piponi's post on the subject is very readable, but since the isomorphism requires a large number of steps, the code he builds is unfortunately quite long and hard to read. With Category-Syntax, we can do much better.
 
 We will need a `Category` for isomorphisms, and a data structure for trees:
 
@@ -62,7 +62,7 @@ data Tree a = Leaf a | Branch (Tree a) (Tree a)
 tree :: Bij (Tree a) (Either a (Tree a, Tree a))
 ```
 
-In his blog post, Sigfpe implements `commute`, `associate`, `associate'`, and `liftLeft`. These correspond to the structural operations `swap`, `associate`, `coassociate`, and `first`, which we need to implement ourselves because we are using a custom category.
+In his blog post, Dan implements `commute`, `associate`, `associate'`, and `liftLeft`. These correspond to the structural operations `swap`, `associate`, `coassociate`, and `first`, which we need to implement ourselves because we are using a custom category.
 
 ```haskell
 instance PFunctor Bij Either where first = ...
@@ -72,7 +72,7 @@ instance Symmetric Bij Either where swap = ...
 instance Associative Bij Either where ...
 ```
 
-Now that we have implemented those structural rules, we can let Category-Syntax figure out when they need to be used. This greatly simplifies the code for describing the isomorphism, as we can now focus on the calls to `tree` and `inverse tree` instead of having to constantly rearrange the variables like in Sigfpe's version.
+Now that we have implemented those structural rules, we can let Category-Syntax figure out when they need to be used. This greatly simplifies the code for describing the isomorphism, as we can now focus on the calls to `tree` and `inverse tree` instead of having to constantly rearrange the variables like in Dan's version.
 
 ```haskell
 iso :: Bij T1 T7
@@ -118,7 +118,7 @@ In order for the above to be a valid isomorphism, each variable must be used exa
 
 ### Wire Diagrams
 
-Another great Sigfpe post is about [untangling knots](http://blog.sigfpe.com/2008/08/untangling-with-continued-fractions_16.html). He uses do-notation to represent a knot as a collection of curves and overlapping sections:
+Another great post from Dan Piponi is about [untangling knots](http://blog.sigfpe.com/2008/08/untangling-with-continued-fractions_16.html). He uses do-notation to represent a knot as a collection of curves and overlapping sections:
 
 ```haskell
 example (a,b) = do
