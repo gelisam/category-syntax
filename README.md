@@ -77,26 +77,40 @@ Now that we have implemented those structural rules, we can let Category-Syntax 
 ```haskell
 iso :: Bij T1 T7
 iso = $(syntax [|
-    t1                    <- getInput
-    (t0, t2)              <- tree t1
-    (  t1, t3)            <- tree t2
-    (    t2, t4)          <- tree t3
-    (      t3, t5)        <- tree t4
-    (        t4, t6)      <- tree t5
-    (          t5,  t7)   <- tree t6
-    (            t6,  t8) <- tree t7
-    (          t5', t7)   <- tree t6
-    (        t4',t6)      <- tree t5'
-    t3'                   <- inverse tree (    t2, t4')
-    t2                    <- inverse tree (  t1, t3')
-    t1                    <- inverse tree (t0, t2)
-    t2                    <- inverse tree (  t1, t3)
-    t3                    <- inverse tree (    t2, t4)
-    t4                    <- inverse tree (      t3, t5)
-    t5                    <- inverse tree (        t4, t6)
-    t6                    <- inverse tree (          t5, t7)
-    t7                    <- inverse tree (            t6, t8)
-    returnC t7
+    -- in this function, primed variables are consumed immediately
+    t1' <- getInput
+    
+    (t0, t2') <- tree t1'
+    (t1, t3') <- tree t2'
+    (t2, t4') <- tree t3'
+    (t3, t5') <- tree t4'
+    (t4, t6') <- tree t5'
+    (t5', t7) <- tree t6'
+    
+    -- still in scope: t0,t1,t2,t3,t4,  t7
+    
+    t4' <- inverse tree (t3, t5')
+    t3' <- inverse tree (t2, t4')
+    t2' <- inverse tree (t1, t3')
+    t1  <- inverse tree (t0, t2')
+    
+    -- still in scope: t1,  t4,  t7
+    
+    (t6', t8) <- tree t7
+    (t5', t7) <- tree t6'
+    (t4', t6) <- tree t5'
+    (t3', t5) <- tree t4'
+    
+    -- still in scope: t1,  t4,t5,t6,t7,t8
+    
+    t2' <- inverse tree (t1, t3')
+    t3' <- inverse tree (t2', t4)
+    t4' <- inverse tree (t3', t5)
+    t5' <- inverse tree (t4', t6)
+    t6' <- inverse tree (t5', t7)
+    t7' <- inverse tree (t6', t8)
+    
+    returnC t7'
   |])
 ```
 
