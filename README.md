@@ -183,7 +183,7 @@ cap = linear Cap
 cup = linear Cup
 ```
 
-The datatype `KnotSection` is not itself a `Category`, because it only represents the ways in which strands can interact, not the ways in which those interactions can be composed. With `Linear`, we build a free symmetric monoidal category, that is, a structure in which variables can be freely paired and rearranged. Without the extra structure of a cartesian closed category, which allows variables to be dropped or duplicated, the variables of a symmetric monoidal category must be used exactly once.
+The datatype `KnotSection` is not itself a `Category`, because it only represents the ways in which strands can interact, not the ways in which those interactions can be composed. To support those compositions, we use `Linear` to lift the base operations of `KnotSection` into a category with a particular structure. The structure for `Linear` is a "free symmetric monoidal category", that is, a structure in which variables can be freely paired and rearranged. Without the extra structure of a cartesian closed category, which allows variables to be dropped or duplicated, the variables of a symmetric monoidal category must be used exactly once.
 
 We can now describe our knot using almost the same code as before, except this time we can't accidentally drop or reuse a variable:
 
