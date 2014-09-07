@@ -25,6 +25,6 @@ unPipeline p = foldr compose (finalCommand p) exps
   where
     exps :: [Exp]
     exps = map unStep (intermediateSteps p)
-    
-    compose :: Exp -> Exp -> Exp
-    compose x y = InfixE (Just x) (VarE thenName) (Just y)
+
+compose :: Exp -> Exp -> Exp
+compose x y = InfixE (Just x) (VarE thenName) (Just y)

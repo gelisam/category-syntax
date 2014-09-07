@@ -26,5 +26,8 @@ thenName = '(>>>)
 dollarName :: Name
 dollarName = '($)
 
+constName :: Name
+constName = 'const
+
 swapName :: Name
 swapName = 'swap

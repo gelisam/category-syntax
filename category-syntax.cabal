@@ -28,7 +28,8 @@ library
                      , Control.Category.Structural
                      , Control.Category.Structural.Free
                      , Control.Category.Syntax
-  other-modules:       Control.Category.Syntax.Names
+  other-modules:       Control.Category.Syntax.Debug
+                     , Control.Category.Syntax.Names
                      , Control.Category.Syntax.Parse
                      , Control.Category.Syntax.Print
                      , Control.Category.Syntax.Return

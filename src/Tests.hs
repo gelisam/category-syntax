@@ -12,12 +12,14 @@ import Language.Haskell.TH.Lib
 import Text.Printf
 
 import Control.Category.Syntax
+import Control.Category.Syntax.Names
 
 -- $setup
 -- >>> let printQ = (>>= putStrLn) . runQ . fmap show
 -- >>> let pprintQ = (>>= putStrLn) . runQ . fmap showExp
 
--- A pretty-printer, specialized for the output of $(syntax ...).
+-- A pretty-printer, specialized for the output of $(syntax ...)
+-- and $(debugSyntax ...).
 -- 
 -- >>> show [|foo >>> bar|]
 -- InfixE (Just (VarE Tests.foo)) (VarE Control.Category.>>>) (Just (VarE Tests.bar))
@@ -27,13 +29,14 @@ import Control.Category.Syntax
 -- foo >>> bar >>> baz
 showExp :: Exp -> String
 showExp (VarE x) = showName x
-showExp (InfixE (Just e1) (VarE gtgtgt) (Just e2))
-  | gtgtgt == gtgtgtName
+showExp (InfixE (Just e1) (VarE then') (Just e2))
+  | then' == thenName
   = printf "%s >>> %s" (showExp e1) (showExp e2)
+showExp (AppE (AppE (VarE const') (VarE id')) (LitE (StringL s)))
+  | const' == constName
+  , id' == idName
+  = printf "{%s}" s
 showExp e = pprint e
-
-gtgtgtName :: Name
-gtgtgtName = '(>>>)
 
 -- >>> show 'id
 -- Control.Category.id
@@ -143,6 +146,15 @@ typeTest2 = $(syntax [|do
     add (y,z)
   |])
 
+
+-- |
+-- >>> pprintQ testDebugSyntax
+-- {Var x_6} >>> {Var x_6} >>> splitEither >>> {Pair (Var y_7) (Var z_8)} >>> joinEither >>> {Pair (Var y_7) (Var z_8)}
+testDebugSyntax = debugSyntax [|do
+    x <- getInput
+    (y,z) <- splitEither x
+    joinEither (y,z)
+  |]
 
 -- |
 -- >>> pprintQ test3

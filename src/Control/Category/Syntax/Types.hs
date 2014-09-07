@@ -5,6 +5,7 @@ import Language.Haskell.TH
 
 -- A simpler representation for nested tuples of variables.
 data Vars = Var Name | Pair Vars Vars
+  deriving (Show, Eq)
 
 -- A black box Exp, provided by the user.
 type Cmd = Exp
@@ -15,6 +16,7 @@ data Step a = Step
   , command  :: Cmd  -- cmd :: k (a,b,...) (a',b',...)
   , postCont :: a    -- (x',b',...)
   }
+  deriving (Show, Eq)
 
 -- A simpler representation for [|do x <- getInput
 --                                   y <- cmd x
@@ -28,3 +30,4 @@ data Pipeline a = Pipeline
   , finalCond         :: a         --            z
   , finalCommand      :: Cmd       --    returnC
   }
+  deriving (Show, Eq)
