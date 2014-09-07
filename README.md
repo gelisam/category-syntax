@@ -242,6 +242,7 @@ refCountExample = $(syntax [|do
     -- the resource should be released here
     () <- noop
     () <- noop
+    returnC ()
   |])
 ```
 
