@@ -26,12 +26,14 @@ import Control.Category.Syntax.Names
 -- >>> pprint [|foo >>> bar|]
 -- Tests.foo Control.Category.>>> (Tests.bar Control.Category.>>> Tests.baz)
 -- >>> showExp [|foo >>> bar >>> baz|]
--- foo >>> bar >>> baz
+-- foo
+-- bar
+-- baz
 showExp :: Exp -> String
 showExp (VarE x) = showName x
 showExp (InfixE (Just e1) (VarE then') (Just e2))
   | then' == thenName
-  = printf "%s >>> %s" (showExp e1) (showExp e2)
+  = printf "%s\n%s" (showExp e1) (showExp e2)
 showExp (AppE (AppE (VarE const') (VarE id')) (LitE (StringL s)))
   | const' == constName
   , id' == idName
@@ -115,7 +117,8 @@ typeTest0 = $(syntax [|do
 
 -- |
 -- >>> pprintQ test1
--- split >>> add
+-- split
+-- add
 test1 = syntax [|do
     x <- getInput
     yz <- split $ x
@@ -132,7 +135,8 @@ typeTest1 = $(syntax [|do
 
 -- |
 -- >>> pprintQ test2
--- split >>> add
+-- split
+-- add
 test2 = syntax [|do
     x <- getInput
     (y,z) <- split x
@@ -149,7 +153,12 @@ typeTest2 = $(syntax [|do
 
 -- |
 -- >>> pprintQ testDebugSyntax
--- {Var x_6} >>> {Var x_6} >>> splitEither >>> {Pair (Var y_7) (Var z_8)} >>> joinEither >>> {Pair (Var y_7) (Var z_8)}
+-- {Var x_6}
+-- {Var x_6}
+-- splitEither
+-- {Pair (Var y_7) (Var z_8)}
+-- joinEither
+-- {Pair (Var y_7) (Var z_8)}
 testDebugSyntax = debugSyntax [|do
     x <- getInput
     (y,z) <- splitEither x
@@ -158,7 +167,8 @@ testDebugSyntax = debugSyntax [|do
 
 -- |
 -- >>> pprintQ test3
--- splitEither >>> joinEither
+-- splitEither
+-- joinEither
 test3 = syntax [|do
     x <- getInput
     (y,z) <- splitEither x
@@ -175,7 +185,9 @@ typeTest3 = $(syntax [|do
 
 -- -- |
 -- -- >>> pprintQ test4
--- -- split >>> swap >>> add
+-- -- split
+-- -- swap
+-- -- add
 -- test4 = syntax [|do
 --     x <- getInput
 --     (y,z) <- split x
@@ -192,7 +204,9 @@ typeTest3 = $(syntax [|do
 
 -- -- |
 -- -- >>> pprintQ test5
--- -- split >>> first op >>> add
+-- -- split
+-- -- first op
+-- -- add
 -- test5 = syntax [|do
 --     x <- getInput
 --     (y,z) <- split x
@@ -211,7 +225,9 @@ typeTest3 = $(syntax [|do
 -- 
 -- -- |
 -- -- >>> pprintQ test6
--- -- splitEither >>> second op >>> joinEither
+-- -- splitEither
+-- -- econd op
+-- -- joinEither
 -- test6 = syntax [|do
 --     x <- getInput
 --     (y,z) <- splitEither x
