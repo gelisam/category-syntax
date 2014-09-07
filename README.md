@@ -262,7 +262,7 @@ useVar = RefCounted $ \x -> do
     r <- reallyUseVar x
     decreaseCounter x
     remaining <- readCounter x
-    when (x == 0) $ do
+    when (remaining == 0) $ do
       releaseResource x
     return r
 ```
