@@ -210,6 +210,18 @@ example' = $(syntax [|do
   |])
 ```
 
+If we make a mistake, we get a type error.
+
+```haskell
+-- No instance for (Contract Knot) arising from a use of ‘diag’
+mistake :: Knot (a,b) (m,z)
+mistake = $(syntax [|do
+    (a,b) <- getInput
+    () <- cup (a,b)
+    returnC (a,b)
+  |])
+```
+
 ### Reference Counting
 
 When a variable is dropped or reused, Category-Syntax inserts the corresponding structural operation between two user actions. By interpreting those structural operations accordingly, it should be possible to determine when a resource is last used, so it can be released as early as possible.
