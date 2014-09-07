@@ -28,7 +28,11 @@ library
                      , Control.Category.Structural
                      , Control.Category.Structural.Free
                      , Control.Category.Syntax
-  -- other-modules:       
+  other-modules:       Control.Category.Syntax.Names
+                     , Control.Category.Syntax.Parse
+                     , Control.Category.Syntax.Return
+                     , Control.Category.Syntax.Types
+                     , Control.Category.Syntax.Vars
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.8
                      , template-haskell
