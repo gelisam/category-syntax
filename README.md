@@ -165,7 +165,7 @@ example (a,b) = do
   return (m,z)
 ```
 
-We give names to the strands coming out of each section, and we use each name exactly once as part of the arguments for the next section in which the strand takes part.
+We give names to the strands coming out of each section, and we use each name exactly once, as part of the two arguments of the next section in which the strand takes part.
 
 With so many variables, it is easy for a typo to cause a variable to be used more than once, but with do-notation, the mistake will not be caught. Let's use Category-Syntax to create a safer knot-description language.
 
