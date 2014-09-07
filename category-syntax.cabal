@@ -30,6 +30,7 @@ library
                      , Control.Category.Syntax
   other-modules:       Control.Category.Syntax.Names
                      , Control.Category.Syntax.Parse
+                     , Control.Category.Syntax.Print
                      , Control.Category.Syntax.Return
                      , Control.Category.Syntax.Types
                      , Control.Category.Syntax.Vars

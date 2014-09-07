@@ -9,6 +9,7 @@ import Text.Printf
 
 import Control.Category.Syntax.Names
 import Control.Category.Syntax.Parse
+import Control.Category.Syntax.Print
 import Control.Category.Syntax.Return
 import Control.Category.Syntax.Types
 import Control.Category.Syntax.Vars
