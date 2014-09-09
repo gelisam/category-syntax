@@ -4,16 +4,30 @@ module Data.InterList where
 import Control.Applicative
 import Control.Monad
 import Data.Monoid
+import Data.List
+import Text.Printf
 
 import Data.List.Scan
 
 
 type NonEmptyList a = (a,[a])
 
+prettyNonEmptyList :: Show a => NonEmptyList a -> String
+prettyNonEmptyList (x,xs) = show (x:xs)
+
 
 -- A non-empty list of values of type @a@, separated by values of type @s@.
 data InterList s a = InterList a [(s, a)]
   deriving (Show, Eq, Functor)
+
+prettyInterList :: (Show s, Show a) => InterList s a -> String
+prettyInterList (InterList x0 sxs)
+  = printf "[%s]" (intercalate " " (s0 : sss))
+  where
+    s0 = show x0
+    sss = map show1 sxs
+    show1 (s, x) = printf "{%s} %s" (show s) (show x)
+
 
 instance Monoid a => Monoid (InterList s a) where
     mempty = InterList mempty []
