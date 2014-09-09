@@ -36,6 +36,7 @@ library
                      , Control.Category.Syntax.Types
                      , Control.Category.Syntax.Vars
                      , Data.List.Scan
+                     , Data.InterList
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.8
                      , template-haskell
