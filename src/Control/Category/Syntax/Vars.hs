@@ -5,36 +5,29 @@ import Data.List
 import Language.Haskell.TH
 
 import Control.Category.Syntax.Types
+import Data.InterList
 
 
 type Names = [Name]
-type AllVars = (Vars, [Name])
 
-listVars :: Vars -> Names
-listVars (Var x) = [x]
-listVars (Pair x y) = listVars x ++ listVars y
+listVarNames :: Vars -> Names
+listVarNames (Var x) = [x]
+listVarNames (Pair x y) = listVarNames x ++ listVarNames y
 
--- Make preconditions list all the variables created before this point,
--- and postconditions list all the variables needed afterwards.
-allVars :: Pipeline Vars -> Pipeline AllVars
-allVars (Pipeline {..}) = Pipeline (initialCond, noVars)
-                                   intermediateSteps'
-                                   (finalCond, allVars')
-                                   finalCommand
+
+data NameInfo = NameInfo
+  { availableNames :: Names  -- bound earlier
+  , liveNames      :: Names  -- used later
+  }
+  deriving (Show, Eq)
+
+interleaveNameInfo :: Pipeline Vars -> InterList (Step Vars) NameInfo
+interleaveNameInfo (Pipeline {..})
+  = mapElements (uncurry NameInfo)
+  $ scanlrAroundSeparators accumBound accumUsed
+                           names0 intermediateSteps namesF
   where
-    noVars = []
-    (intermediateSteps', allVars') = go noVars intermediateSteps
-    
-    go :: Names -> [Step Vars] -> ([Step AllVars], Names)
-    go prevScope [] = ([], prevScope)
-    go prevScope (step:steps) = (step':steps', newUsedVars)
-      where
-        (steps', futureUsedVars) = go newScope steps
-        
-        Step varsUsedByCmd cmd varsProducedByCmd = step
-        step' = Step (varsUsedByCmd, prevScope)
-                     cmd
-                     (varsProducedByCmd, futureUsedVars)
-        
-        newScope = prevScope ++ listVars varsProducedByCmd
-        newUsedVars = futureUsedVars `union` listVars varsUsedByCmd
+    names0 = listVarNames initialCond
+    namesF = listVarNames finalCond
+    accumBound vars (Step _ _ boundVars) = vars `union` listVarNames boundVars
+    accumUsed  (Step usedVars _ _)  vars = vars `union` listVarNames usedVars
