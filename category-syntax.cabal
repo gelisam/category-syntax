@@ -29,10 +29,10 @@ library
                      , Control.Category.Structural.Free
                      , Control.Category.Syntax
   other-modules:       Control.Category.Syntax.Builtin
-                     , Control.Category.Syntax.Debug
+                     , Control.Category.Syntax.Debug.Old
                      , Control.Category.Syntax.Names
-                     , Control.Category.Syntax.Parse
-                     , Control.Category.Syntax.Print
+                     , Control.Category.Syntax.Parse.Old
+                     , Control.Category.Syntax.Print.Old
                      , Control.Category.Syntax.Types
                      , Control.Category.Syntax.Types.Old
                      , Control.Category.Syntax.Vars

@@ -1,5 +1,5 @@
 -- | "Print" our precise types down to raw Exp.
-module Control.Category.Syntax.Print where
+module Control.Category.Syntax.Print.Old where
 
 import Language.Haskell.TH
 

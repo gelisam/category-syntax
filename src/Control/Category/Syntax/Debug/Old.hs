@@ -1,10 +1,10 @@
 -- | A variant of Syntax.Print which displays the intermediate data.
-module Control.Category.Syntax.Debug where
+module Control.Category.Syntax.Debug.Old where
 
 import Language.Haskell.TH
 
 import Control.Category.Syntax.Names
-import Control.Category.Syntax.Print
+import Control.Category.Syntax.Print.Old
 import Control.Category.Syntax.Types.Old
 
 

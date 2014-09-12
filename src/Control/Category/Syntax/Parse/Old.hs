@@ -1,5 +1,5 @@
 -- | "Parse" from a raw Exp to a more precise type.
-module Control.Category.Syntax.Parse where
+module Control.Category.Syntax.Parse.Old where
 
 import Language.Haskell.TH
 import Text.Printf

@@ -4,9 +4,9 @@ module Control.Category.Syntax (getInput, returnC, syntax, debugSyntax) where
 import Language.Haskell.TH
 
 import Control.Category.Syntax.Builtin
-import Control.Category.Syntax.Debug
-import Control.Category.Syntax.Parse
-import Control.Category.Syntax.Print
+import Control.Category.Syntax.Debug.Old
+import Control.Category.Syntax.Parse.Old
+import Control.Category.Syntax.Print.Old
 import Control.Category.Syntax.Vars
 
 
