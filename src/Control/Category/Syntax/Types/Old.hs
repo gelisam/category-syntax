@@ -1,4 +1,4 @@
-module Control.Category.Syntax.Types where
+module Control.Category.Syntax.Types.Old where
 
 import Language.Haskell.TH
 

@@ -4,7 +4,7 @@ module Control.Category.Syntax.Vars where
 import Data.List
 import Language.Haskell.TH
 
-import Control.Category.Syntax.Types
+import Control.Category.Syntax.Types.Old
 import Data.InterList
 
 

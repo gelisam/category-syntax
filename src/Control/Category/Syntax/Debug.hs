@@ -5,7 +5,7 @@ import Language.Haskell.TH
 
 import Control.Category.Syntax.Names
 import Control.Category.Syntax.Print
-import Control.Category.Syntax.Types
+import Control.Category.Syntax.Types.Old
 
 
 debugShow :: Show a => a -> Exp

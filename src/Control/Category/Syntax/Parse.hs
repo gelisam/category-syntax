@@ -5,7 +5,7 @@ import Language.Haskell.TH
 import Text.Printf
 
 import Control.Category.Syntax.Names
-import Control.Category.Syntax.Types
+import Control.Category.Syntax.Types.Old
 
 
 mkVarsE :: Exp -> Vars

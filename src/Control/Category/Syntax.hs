@@ -7,6 +7,7 @@ import Control.Category.Syntax.Builtin
 import Control.Category.Syntax.Debug
 import Control.Category.Syntax.Parse
 import Control.Category.Syntax.Print
+import Control.Category.Syntax.Vars
 
 
 syntax :: Q Exp -> Q Exp
