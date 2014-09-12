@@ -33,6 +33,7 @@ library
                      , Control.Category.Syntax.Names
                      , Control.Category.Syntax.Parse
                      , Control.Category.Syntax.Print
+                     , Control.Category.Syntax.Types
                      , Control.Category.Syntax.Types.Old
                      , Control.Category.Syntax.Vars
                      , Data.List.Scan
