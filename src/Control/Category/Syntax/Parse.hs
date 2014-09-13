@@ -47,8 +47,8 @@ parseFirstStep e = error msg
 parseSurfaceStep :: Stmt -> SurfaceStep
 parseSurfaceStep (BindS lhs rhs) = (in_, cmd, out)
   where
-    in_ = parseLhs lhs
-    (out, cmd) = parseRhs rhs
+    out = parseLhs lhs
+    (in_, cmd) = parseRhs rhs
 parseSurfaceStep s = error msg
   where
     msg = printf "expected (lhs <- ...), got:\n%s" (pprint s)
@@ -64,11 +64,11 @@ parseSurfaceSyntax :: Exp -> SurfaceSyntax
 parseSurfaceSyntax (DoE [e]) = error msg
   where
     msg = printf "expected (do ...; ...), got:\n%s" (pprint (DoE [e]))
-parseSurfaceSyntax (DoE (stmt0:stmts)) = (out, ssteps, in_, cmd)
+parseSurfaceSyntax (DoE (stmt0:stmts)) = (out0, ssteps, inF, cmdF)
   where
-    out = parseFirstStep stmt0
+    out0 = parseFirstStep stmt0
     ssteps = map parseSurfaceStep (init stmts)
-    (in_, cmd) = parseLastStep (last stmts)
+    (inF, cmdF) = parseLastStep (last stmts)
 parseSurfaceSyntax e = error msg
   where
     msg = printf "expected (do ...), got:\n%s" (pprint e)

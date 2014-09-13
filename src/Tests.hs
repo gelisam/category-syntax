@@ -154,11 +154,11 @@ typeTest2 = $(syntax [|do
 -- |
 -- >>> pprintQ testDebugSyntax
 -- {Var x_6}
--- {NameInfo {availableNames = [x_6], liveNames = [y_7,z_8]}}
+-- {NameInfo {availableNames = [x_6], liveNames = [y_7,z_8,x_6]}}
 -- {Var x_6}
 -- splitEither
 -- {Pair (Var y_7) (Var z_8)}
--- {NameInfo {availableNames = [x_6], liveNames = [y_7,z_8]}}
+-- {NameInfo {availableNames = [x_6,y_7,z_8], liveNames = [y_7,z_8]}}
 -- {Pair (Var y_7) (Var z_8)}
 -- joinEither
 testDebugSyntax = debugSyntax [|do
