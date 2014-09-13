@@ -33,6 +33,7 @@ library
                      , Control.Category.Syntax.Names
                      , Control.Category.Syntax.Parse
                      , Control.Category.Syntax.Parse.Old
+                     , Control.Category.Syntax.Print
                      , Control.Category.Syntax.Print.Old
                      , Control.Category.Syntax.Types
                      , Control.Category.Syntax.Types.Old
