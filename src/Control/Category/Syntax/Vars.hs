@@ -22,17 +22,21 @@ data NameInfo = NameInfo
   deriving (Show, Eq)
 
 interleaveNameInfo :: UnifiedSyntax -> AnnotatedSyntax NameInfo
-interleaveNameInfo = fmap (uncurry NameInfo)
-                   . AnnotatedSyntax
-                   . annotate
+interleaveNameInfo usteps = AnnotatedSyntax (map tupleConcat asteps)
   where
-    annotate :: [UnifiedStep] -> [AnnotatedStep (Names,Names)]
-    annotate usteps = asteps
+    tupleConcat :: ((Out, Names), (Names, In, Cmd)) -> AnnotatedStep NameInfo
+    tupleConcat ((out, boundVars), (liveVars, in_, cmd))
+      = (out, NameInfo boundVars liveVars, in_, cmd)
+    
+    asteps :: [((Out, Names), (Names, In, Cmd))]
+    (_, asteps, _) = scanlrAccum f g [] usteps []
+    
+    f :: Names -> UnifiedStep -> ((Out, Names), Names)
+    f boundVars (out, _, _) = ((out, boundVars'), boundVars')
       where
-        (_, asteps, _) = scanlrAccum f g [] usteps []
-        f boundVars (out, in_, cmd) = ((out, boundVars', in_, cmd), boundVars')
-          where
-            boundVars' = boundVars `union` listVarNames out
-        g (out, in_, cmd) liveVars = (liveVars', (out, liveVars', in_, cmd))
-          where
-            liveVars' = liveVars `union` listVarNames in_
+        boundVars' = boundVars `union` listVarNames out
+    
+    g :: UnifiedStep -> Names -> (Names, (Names, In, Cmd))
+    g (_, in_, cmd) liveVars = (liveVars', (liveVars', in_, cmd))
+      where
+        liveVars' = liveVars `union` listVarNames in_
