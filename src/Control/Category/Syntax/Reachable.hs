@@ -38,8 +38,9 @@ congReachable reachable (Pair x y) (Pair x' y') = reachable x x'
 congReachable _ x x' = idReachable x x'
 
 swapReachable :: ReachabilityTest
-swapReachable (Pair x y) (Pair y' x') = swapReachable x x'
-                                     && swapReachable y y'
+swapReachable (Pair x y) (Pair y' x')
+                   = (swapReachable x x' && swapReachable y y')
+                  || congReachable swapReachable x x'
 swapReachable x x' = congReachable swapReachable x x'
 
 assocReachable :: ReachabilityTest
