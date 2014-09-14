@@ -16,6 +16,14 @@ filterV p (Pair x y) = case (filterV p x, filterV p y) of
     (Nothing, Just y') -> Just y'
     (Nothing, Nothing) -> Nothing
 
+repeatV :: Int -> Vars -> Vars
+repeatV 1 x = x
+repeatV n x = Pair x (repeatV (n-1) x)
+
+duplicateV :: (Name -> Int) -> Vars -> Vars
+duplicateV p (Var x) = repeatV (p x) (Var x)
+duplicateV p (Pair x y) = Pair (duplicateV p x) (duplicateV p y)
+
 
 type ReachabilityTest = Vars -> Vars -> Bool
 
@@ -54,3 +62,15 @@ weakenReachable reachable x y = MultiSet.fromList xs
   where
     xs = listVarNames x
     ys = listVarNames y
+
+-- Only works if there are no duplicates in @x@. For example, @((v,v),(v,w))@
+-- is not diag-reachable from @(v,(v,w))@, but it is reachable from @(v,w)@.
+-- 
+-- Since duplicate variables cannot occur in patterns, this condition should
+-- always be satisfied.
+diagReachable :: ReachabilityTest -> ReachabilityTest
+diagReachable reachable x y = reachable x' y
+  where
+    ys = MultiSet.fromList (listVarNames y)
+    p v = count v ys
+    x' = duplicateV p x
