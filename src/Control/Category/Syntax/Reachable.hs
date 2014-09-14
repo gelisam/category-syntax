@@ -1,20 +1,10 @@
 module Control.Category.Syntax.Reachable where
 
-import Data.List
 import Language.Haskell.TH
 
 import Control.Category.Syntax.Types
 import Control.Category.Syntax.Vars
-
-
-sameSetAs :: Eq a => [a] -> [a] -> Bool
-sameSetAs xs ys = (intersect xs ys == xs)
-
-supersetOf :: Eq a => [a] -> [a] -> Bool
-supersetOf xs ys = all (`elem` xs) ys
-
-subsetOf :: Eq a => [a] -> [a] -> Bool
-subsetOf xs ys = supersetOf ys xs
+import Data.MultiSet.Eq as MultiSet
 
 
 filterV :: (Name -> Bool) -> Vars -> Maybe Vars
@@ -47,10 +37,12 @@ assocReachable :: ReachabilityTest
 assocReachable x y = (listVarNames x == listVarNames y)
 
 exchangeReachable :: ReachabilityTest
-exchangeReachable x y = listVarNames x `sameSetAs` listVarNames y
+exchangeReachable x y = MultiSet.fromList (listVarNames x)
+                     == MultiSet.fromList (listVarNames y)
 
 weakenReachable :: ReachabilityTest -> ReachabilityTest
-weakenReachable reachable x y = xs `supersetOf` ys
+weakenReachable reachable x y = MultiSet.fromList xs
+        `MultiSet.isSupersetOf` MultiSet.fromList ys
                              && case filterV (`elem` ys) x of
                                   Just x' -> reachable x' y
                                   Nothing -> False
