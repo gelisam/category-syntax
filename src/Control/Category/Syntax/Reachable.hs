@@ -40,6 +40,11 @@ exchangeReachable :: ReachabilityTest
 exchangeReachable x y = MultiSet.fromList (listVarNames x)
                      == MultiSet.fromList (listVarNames y)
 
+-- Only works if there are no duplicates in @x@. For example, @v@ is not
+-- weaken-reachable from @(v,v)@, but it is reachable from @(v,w)@.
+-- 
+-- Since duplicate variables cannot occur in patterns, this condition should
+-- always be satisfied.
 weakenReachable :: ReachabilityTest -> ReachabilityTest
 weakenReachable reachable x y = MultiSet.fromList xs
         `MultiSet.isSupersetOf` MultiSet.fromList ys
