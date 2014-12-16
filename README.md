@@ -18,6 +18,7 @@ Which should expand to this:
 ```haskell
 rearrange :: Either (Either a1 a2) (Either b1 b2)
           -> Either (Either a1 b1) (Either a2 b2)
+            -- ((x1, x2), (y1,y2)))
 rearrange = associate
             -- (x1, (x2, (y1,y2)))
         >>> second coassociate
