@@ -238,11 +238,11 @@ refCountExample = $(syntax [|do
     () <- noop ()
     () <- useVar x
     () <- useVar x
-    () <- noop
+    () <- noop ()
     () <- useVar x
     -- the resource should be released here
-    () <- noop
-    () <- noop
+    () <- noop ()
+    () <- noop ()
     returnC ()
   |])
 ```
