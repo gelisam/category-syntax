@@ -1,9 +1,7 @@
 {-# LANGUAGE DeriveFunctor #-}
 module Data.InterList where
 
-import Control.Applicative
 import Control.Monad
-import Data.Monoid
 import Data.List
 import Text.Printf
 

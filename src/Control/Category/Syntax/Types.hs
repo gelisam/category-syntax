@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveFunctor, GeneralizedNewtypeDeriving #-}
 module Control.Category.Syntax.Types where
 
-import Data.Monoid
 import Language.Haskell.TH
 
 import Data.InterList
