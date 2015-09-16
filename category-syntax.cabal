@@ -41,6 +41,7 @@ library
                      , Data.MultiSet.Eq
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.9
+                     , doctest >= 0.8
                      , template-haskell
                      , void
   ghc-options:   -W -Wall
