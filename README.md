@@ -149,11 +149,11 @@ Another great post from Dan Piponi is about [untangling knots](http://blog.sigfp
 ```haskell
 example (a,b) = do
   (c,d) <- over (a,b)
-  (e,f) <- cap ()
+  (e,f) <- cap
   (g,h) <- over (c,e)
   (i,j) <- over (f,d)
-  (m,n) <- cap ()
-  (k,l) <- cap ()
+  (m,n) <- cap
+  (k,l) <- cap
   (q,r) <- over (h,k)
   (s,y) <- over (l,i)
   (o,p) <- over (n,g)
