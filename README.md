@@ -1,6 +1,6 @@
 # Category-Syntax
 
-(work in progress)
+(work in progress, not all features documented below are implemented)
 
 Category-Syntax provides a Monad-like syntax for `Category` and various versions of "`Arrow` without `arr`". Once complete, it should looks like this:
 
